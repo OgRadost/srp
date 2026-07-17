@@ -465,7 +465,13 @@ TESTIMONIALS = []
 # więc nie wymaga zgód na referencję; wpisuj wyłącznie rzeczywiste dostawy).
 # Format: ("RRRR-MM", "model sprzętu", "typ jednostki", "region", "logo.png" lub None)
 # Logo (opcjonalne, wymaga zgody jednostki) wrzuć do img/klienci/
-DEPLOYMENTS = []
+# !!! WPISY PRZYKŁADOWE (placeholder do czasu podania prawdziwych dostaw) — PODMIEŃ !!!
+DEPLOYMENTS = [
+    ("2026-06", "Manekin PRO ELITE MILITARY", "jednostka wojskowa", "Polska południowa", None),
+    ("2026-06", "Symulatory ran — zestaw instruktorski", "ośrodek szkoleniowy", "woj. mazowieckie", None),
+    ("2026-07", "Manekin Standard", "straż pożarna", "woj. pomorskie", None),
+    ("2026-07", "Manekin z funkcją RKO", "podmiot medyczny", "woj. śląskie", None),
+]
 
 # ---------------------------------------------------------------- szablon
 def esc(s): return html.escape(s, quote=False)
@@ -1530,24 +1536,6 @@ def page_privacy():
 """
     return head("Polityka prywatności") + body + footer()
 
-def page_meldunek_preview():
-    sample = [
-        ("2026-06", "Manekin PRO ELITE MILITARY 80 kg", "jednostka wojskowa", "Polska południowa", None),
-        ("2026-06", "Symulatory ran — zestaw instruktorski", "ośrodek szkoleniowy", "woj. mazowieckie", None),
-        ("2026-07", "Manekin Standard 70 kg × 2", "PSP", "woj. pomorskie", None),
-        ("2026-07", "Manekin z funkcją RKO", "szpital", "woj. śląskie", None),
-        ("2026-07", "Manekin wodny pływający", "WOPR", "woj. warmińsko-mazurskie", None),
-    ]
-    body = f"""
-<div class="page-head"><div class="wrap"><h1>Podgląd sekcji „Meldunek”</h1>
-<p>⚠️ Strona robocza, nielinkowana z serwisu. Wpisy poniżej to DANE PRZYKŁADOWE — pokazują,
-jak sekcja będzie wyglądać na stronie głównej po wpisaniu prawdziwych dostaw.</p></div></div>
-<section><div class="wrap">
-{render_meldunek(sample)}
-</div></section>
-"""
-    return head("Podgląd meldunku (dane przykładowe)") + body + footer()
-
 def write_seo_files():
     pages = (["index.html", "produkty/index.html"]
              + [f"produkty/{p['slug']}.html" for p in PRODUCTS]
@@ -1580,7 +1568,6 @@ def main():
     write("do-pobrania.html", page_downloads())
     write("faq.html", page_faq())
     write("polityka-prywatnosci.html", page_privacy())
-    write("podglad-meldunek.html", page_meldunek_preview())
     write("wiedza/index.html", page_articles_index())
     for a in ARTICLES:
         write(f"wiedza/{a['slug']}.html", page_article(a))
