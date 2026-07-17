@@ -91,7 +91,8 @@ table.specs td,table.specs th{border-bottom:1px solid var(--line);padding-top:10
 
 /* listy szkoleń */
 .course{border:1px solid var(--line);padding:22px 26px;background:#fff}
-.course-ico{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;background:var(--yellow);font-size:26px;margin-bottom:12px}
+.course-ico{display:inline-block;width:54px;height:54px;margin-bottom:12px}
+.course-ico svg{width:100%;height:100%;display:block;filter:drop-shadow(0 1px 2px rgba(0,0,0,.18))}
 .course h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:22px}
 .course p{color:var(--muted);font-size:15px}
 

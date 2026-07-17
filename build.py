@@ -261,13 +261,21 @@ PRODUCTS = [
 ]
 
 # ---------------------------------------------------------------- szkolenia
+# międzynarodowe piktogramy (inline SVG, kanoniczne kolory znaków bezpieczeństwa)
+ICO_STOP_BLEED = """<svg viewBox="0 0 48 48" role="img" aria-label="Kontrola krwotoków"><polygon points="15,2 33,2 46,15 46,33 33,46 15,46 2,33 2,15" fill="#c8102e"/><path d="M24 11c4.2 6 8 10.4 8 15.2A8 8 0 1 1 16 26.2C16 21.4 19.8 17 24 11z" fill="#fff"/></svg>"""
+ICO_AED = """<svg viewBox="0 0 48 48" role="img" aria-label="RKO / AED"><rect width="48" height="48" rx="8" fill="#009639"/><path d="M24 40c-8.5-6.2-14-11.4-14-18.2C10 17 13.7 13 18.4 13c2.3 0 4.4 1 5.6 2.7A6.9 6.9 0 0 1 29.6 13C34.3 13 38 17 38 21.8 38 28.6 32.5 33.8 24 40z" fill="#fff"/><path d="M26.5 15.5 19 27h5l-3.5 10L30 24.5h-5l3.5-9z" fill="#009639"/></svg>"""
+ICO_STAR_LIFE = """<svg viewBox="0 0 48 48" role="img" aria-label="Służby ratownicze"><rect width="48" height="48" rx="8" fill="#0057a8"/><g fill="#fff"><rect x="21" y="5" width="6" height="38" rx="1.5"/><rect x="21" y="5" width="6" height="38" rx="1.5" transform="rotate(60 24 24)"/><rect x="21" y="5" width="6" height="38" rx="1.5" transform="rotate(120 24 24)"/></g><circle cx="24" cy="24" r="6.5" fill="#0057a8"/><circle cx="24" cy="24" r="4.5" fill="#fff"/></svg>"""
+ICO_CHILD = """<svg viewBox="0 0 48 48" role="img" aria-label="RKO dzieci"><rect width="48" height="48" rx="8" fill="#009639"/><path d="M19 34c-6-4.4-10-8.2-10-13a6 6 0 0 1 10.4-4A6 6 0 0 1 29.8 21c0 4.8-4.8 8.6-10.8 13z" fill="#fff"/><path d="M34 42c-4.2-3-7-5.7-7-9a4.2 4.2 0 0 1 7.3-2.8A4.2 4.2 0 0 1 41.6 33c0 3.3-3.4 6-7.6 9z" fill="#fff"/></svg>"""
+ICO_FIRST_AID = """<svg viewBox="0 0 48 48" role="img" aria-label="Pierwsza pomoc"><rect width="48" height="48" rx="8" fill="#009639"/><path d="M19 9h10v10h10v10H29v10H19V29H9V19h10z" fill="#fff"/></svg>"""
+ICO_INSTRUCTOR = """<svg viewBox="0 0 48 48" role="img" aria-label="Kursy instruktorskie"><rect width="48" height="48" rx="8" fill="#0057a8"/><path d="M24 12 4 20l20 8 14-5.6V31h4v-9.4z" fill="#fff"/><path d="M14 27.8V34c0 2.8 4.5 5 10 5s10-2.2 10-5v-6.2l-10 4z" fill="#fff"/></svg>"""
+
 COURSES = [
-    ("🩸", "Stop the Bleed — zatrzymaj krwotok", "Międzynarodowo certyfikowany kurs kontroli krwotoków: staza, packing rany, opatrunek uciskowy. Zajęcia na realistycznych symulatorach ran SRP."),
-    ("🫀", "RKO osób dorosłych", "Podstawowa resuscytacja krążeniowo-oddechowa z użyciem AED."),
-    ("🚨", "RKO dla służb i personelu interwencyjnego", "Rozszerzony program dla strażaków, policjantów i ratowników — praca w zespole, scenariusze."),
-    ("🧒", "RKO dzieci i wypadki z udziałem dzieci", "Resuscytacja niemowląt i dzieci, postępowanie przy zadławieniu i najczęstszych urazach."),
-    ("⛑️", "Pierwsza pomoc S-XABCDE", "Systematyczne badanie i zaopatrywanie poszkodowanego według schematu XABCDE."),
-    ("🎓", "Kursy instruktorskie", "Przygotowanie instruktorów RKO (dorośli / dzieci / służby) i pierwszej pomocy — prowadzone przez certyfikowanych wykładowców z doświadczeniem operacyjnym."),
+    (ICO_STOP_BLEED, "Stop the Bleed — zatrzymaj krwotok", "Międzynarodowo certyfikowany kurs kontroli krwotoków: staza, packing rany, opatrunek uciskowy. Zajęcia na realistycznych symulatorach ran SRP."),
+    (ICO_AED, "RKO osób dorosłych", "Podstawowa resuscytacja krążeniowo-oddechowa z użyciem AED."),
+    (ICO_STAR_LIFE, "RKO dla służb i personelu interwencyjnego", "Rozszerzony program dla strażaków, policjantów i ratowników — praca w zespole, scenariusze."),
+    (ICO_CHILD, "RKO dzieci i wypadki z udziałem dzieci", "Resuscytacja niemowląt i dzieci, postępowanie przy zadławieniu i najczęstszych urazach."),
+    (ICO_FIRST_AID, "Pierwsza pomoc S-XABCDE", "Systematyczne badanie i zaopatrywanie poszkodowanego według schematu XABCDE."),
+    (ICO_INSTRUCTOR, "Kursy instruktorskie", "Przygotowanie instruktorów RKO (dorośli / dzieci / służby) i pierwszej pomocy — prowadzone przez certyfikowanych wykładowców z doświadczeniem operacyjnym."),
 ]
 
 # ---------------------------------------------------------------- branże (B2B)
@@ -667,7 +675,8 @@ table.specs td,table.specs th{border-bottom:1px solid var(--line);padding-top:10
 
 /* listy szkoleń */
 .course{border:1px solid var(--line);padding:22px 26px;background:#fff}
-.course-ico{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;background:var(--yellow);font-size:26px;margin-bottom:12px}
+.course-ico{display:inline-block;width:54px;height:54px;margin-bottom:12px}
+.course-ico svg{width:100%;height:100%;display:block;filter:drop-shadow(0 1px 2px rgba(0,0,0,.18))}
 .course h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:22px}
 .course p{color:var(--muted);font-size:15px}
 
@@ -987,6 +996,15 @@ interwencyjnych. Kursy kontroli krwotoków realizujemy według międzynarodowych
 Stop the Bleed, na realistycznych symulatorach ran SRP.</p></div></div>
 <section><div class="wrap">
   <div class="grid3">{courses}</div>
+  <div style="margin-top:44px">
+    <h3>Uczymy według międzynarodowych standardów</h3>
+    <div class="trustbar" style="background:#f4f4f2;border:1px solid var(--line);margin-top:14px"><div class="wrap" style="padding:0">
+      <span>Wytyczne resuscytacji ERC</span>
+      <span>Program „Stop the Bleed”</span>
+      <span>Certyfikowani instruktorzy</span>
+      <span>Doświadczenie operacyjne służb</span>
+    </div></div>
+  </div>
   <p class="lead" style="margin-top:40px">Szkolimy w siedzibie klienta lub we wskazanym ośrodku, na sprzęcie,
   który potem możesz mieć u siebie. Zapytaj o program szyty na miarę Twojej organizacji.</p>
   <div style="margin-top:20px">{btn("zapytanie-ofertowe.html", "Zapytaj o termin i wycenę")}</div>
