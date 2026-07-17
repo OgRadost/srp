@@ -91,6 +91,7 @@ table.specs td,table.specs th{border-bottom:1px solid var(--line);padding-top:10
 
 /* listy szkoleń */
 .course{border:1px solid var(--line);padding:22px 26px;background:#fff}
+.course-ico{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;background:var(--yellow);font-size:26px;margin-bottom:12px}
 .course h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:22px}
 .course p{color:var(--muted);font-size:15px}
 

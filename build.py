@@ -262,12 +262,12 @@ PRODUCTS = [
 
 # ---------------------------------------------------------------- szkolenia
 COURSES = [
-    ("Stop the Bleed — zatrzymaj krwotok", "Międzynarodowo certyfikowany kurs kontroli krwotoków: staza, packing rany, opatrunek uciskowy. Zajęcia na realistycznych symulatorach ran SRP."),
-    ("RKO osób dorosłych", "Podstawowa resuscytacja krążeniowo-oddechowa z użyciem AED."),
-    ("RKO dla służb i personelu interwencyjnego", "Rozszerzony program dla strażaków, policjantów i ratowników — praca w zespole, scenariusze."),
-    ("RKO dzieci i wypadki z udziałem dzieci", "Resuscytacja niemowląt i dzieci, postępowanie przy zadławieniu i najczęstszych urazach."),
-    ("Pierwsza pomoc S-XABCDE", "Systematyczne badanie i zaopatrywanie poszkodowanego według schematu XABCDE."),
-    ("Kursy instruktorskie", "Przygotowanie instruktorów RKO (dorośli / dzieci / służby) i pierwszej pomocy — prowadzone przez certyfikowanych wykładowców z doświadczeniem operacyjnym."),
+    ("🩸", "Stop the Bleed — zatrzymaj krwotok", "Międzynarodowo certyfikowany kurs kontroli krwotoków: staza, packing rany, opatrunek uciskowy. Zajęcia na realistycznych symulatorach ran SRP."),
+    ("🫀", "RKO osób dorosłych", "Podstawowa resuscytacja krążeniowo-oddechowa z użyciem AED."),
+    ("🚨", "RKO dla służb i personelu interwencyjnego", "Rozszerzony program dla strażaków, policjantów i ratowników — praca w zespole, scenariusze."),
+    ("🧒", "RKO dzieci i wypadki z udziałem dzieci", "Resuscytacja niemowląt i dzieci, postępowanie przy zadławieniu i najczęstszych urazach."),
+    ("⛑️", "Pierwsza pomoc S-XABCDE", "Systematyczne badanie i zaopatrywanie poszkodowanego według schematu XABCDE."),
+    ("🎓", "Kursy instruktorskie", "Przygotowanie instruktorów RKO (dorośli / dzieci / służby) i pierwszej pomocy — prowadzone przez certyfikowanych wykładowców z doświadczeniem operacyjnym."),
 ]
 
 # ---------------------------------------------------------------- branże (B2B)
@@ -667,6 +667,7 @@ table.specs td,table.specs th{border-bottom:1px solid var(--line);padding-top:10
 
 /* listy szkoleń */
 .course{border:1px solid var(--line);padding:22px 26px;background:#fff}
+.course-ico{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;background:var(--yellow);font-size:26px;margin-bottom:12px}
 .course h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:22px}
 .course p{color:var(--muted);font-size:15px}
 
@@ -765,7 +766,7 @@ def page_home():
         f'<p>{esc(p["short"])}</p>{btn("produkty/" + p["slug"] + ".html", "Czytaj więcej")}</div></div>'
         for p in PRODUCTS
     )
-    courses = "\n".join(f'<div class="course"><h3>{esc(n)}</h3><p>{esc(d)}</p></div>' for n, d in COURSES)
+    courses = "\n".join(f'<div class="course"><span class="course-ico">{i}</span><h3>{esc(n)}</h3><p>{esc(d)}</p></div>' for i, n, d in COURSES)
     by_slug = {p["slug"]: p for p in PRODUCTS}
     segs = "\n".join(
         f'<div class="seg"><h3>{esc(s["name"])}</h3><p>{esc(s["desc"])}</p><div class="tags">'
@@ -978,7 +979,7 @@ def page_product(p):
     return head(p["name"], 1) + body + footer(1)
 
 def page_trainings():
-    courses = "\n".join(f'<div class="course"><h3>{esc(n)}</h3><p>{esc(d)}</p></div>' for n, d in COURSES)
+    courses = "\n".join(f'<div class="course"><span class="course-ico">{i}</span><h3>{esc(n)}</h3><p>{esc(d)}</p></div>' for i, n, d in COURSES)
     body = f"""
 <div class="page-head"><div class="wrap"><h1>Szkolenia</h1>
 <p>Szkolenia prowadzą certyfikowani instruktorzy z wieloletnim doświadczeniem w służbach
