@@ -125,6 +125,8 @@ table.specs td,table.specs th{border-bottom:1px solid var(--line);padding-top:10
 .d-body span{font-size:13px;color:#9a9a9a}
 .stamp{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:13px;letter-spacing:2px;color:var(--yellow);border:2px solid var(--yellow);padding:3px 10px;transform:rotate(-6deg);white-space:nowrap}
 .m-foot{border-top:1px solid #2b2b2b;margin-top:4px;padding-top:12px;font-size:12px;color:#7a7a7a}
+.m-viewport{overflow:hidden}
+.m-track{will-change:transform}
 @media(max-width:600px){.deploy{flex-wrap:wrap}.stamp{margin-left:88px}}
 .course h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:22px}
 .course p{color:var(--muted);font-size:15px}

@@ -725,6 +725,8 @@ table.specs td,table.specs th{border-bottom:1px solid var(--line);padding-top:10
 .d-body span{font-size:13px;color:#9a9a9a}
 .stamp{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:13px;letter-spacing:2px;color:var(--yellow);border:2px solid var(--yellow);padding:3px 10px;transform:rotate(-6deg);white-space:nowrap}
 .m-foot{border-top:1px solid #2b2b2b;margin-top:4px;padding-top:12px;font-size:12px;color:#7a7a7a}
+.m-viewport{overflow:hidden}
+.m-track{will-change:transform}
 @media(max-width:600px){.deploy{flex-wrap:wrap}.stamp{margin-left:88px}}
 .course h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:22px}
 .course p{color:var(--muted);font-size:15px}
@@ -859,10 +861,47 @@ def page_home():
         deploys_html = f'''
         <div class="meldunek">
           <div class="m-head"><span class="m-dot"></span> MELDUNEK: FANTOMY W SŁUŻBIE</div>
-          <div class="m-stats"><b>{n_units}</b> {w_odm} &nbsp;·&nbsp; <b>{n_regions}</b> {r_odm} &nbsp;·&nbsp; status: <b>operacyjne</b></div>
+          <div class="m-stats"><b data-n="{n_units}">0</b> {w_odm} &nbsp;·&nbsp; <b data-n="{n_regions}">0</b> {r_odm} &nbsp;·&nbsp; status: <b>operacyjne</b></div>
+          <div class="m-viewport"><div class="m-track">
           {rows}
+          </div></div>
           <div class="m-foot">Dziennik aktualizowany po każdej dostawie. Nazwy jednostek publikujemy wyłącznie za ich zgodą.</div>
-        </div>'''
+        </div>
+        <script>
+        (function(){{
+          var track=document.querySelector('.m-track'); if(!track) return;
+          var vp=document.querySelector('.m-viewport'), VISIBLE=3;
+          function setH(){{ var s=0,i; for(i=0;i<VISIBLE&&i<track.children.length;i++) s+=track.children[i].offsetHeight; vp.style.height=s+'px'; }}
+          if(track.children.length>VISIBLE){{
+            setH(); window.addEventListener('resize',setH);
+            setInterval(function(){{
+              var h=track.children[0].offsetHeight;
+              track.style.transition='transform .6s ease';
+              track.style.transform='translateY(-'+h+'px)';
+              track.addEventListener('transitionend',function te(){{
+                track.removeEventListener('transitionend',te);
+                track.style.transition='none';
+                track.appendChild(track.children[0]);
+                track.style.transform='translateY(0)';
+                setH();
+              }});
+            }},3200);
+          }}
+          var nums=document.querySelectorAll('.m-stats b[data-n]');
+          var io=new IntersectionObserver(function(es){{
+            es.forEach(function(e){{
+              if(!e.isIntersecting) return; io.unobserve(e.target);
+              var end=+e.target.getAttribute('data-n'), t0=performance.now(), dur=1400;
+              requestAnimationFrame(function step(t){{
+                var p=Math.min(1,(t-t0)/dur);
+                e.target.textContent=Math.round(end*(1-Math.pow(1-p,3)));
+                if(p<1) requestAnimationFrame(step);
+              }});
+            }});
+          }},{{threshold:.4}});
+          nums.forEach(function(n){{io.observe(n);}});
+        }})();
+        </script>'''
     if TESTIMONIALS:
         quotes = ('<div class="grid3" style="margin-top:36px">' + "\n".join(
             f'<div class="quote"><p>„{esc(t)}”</p><div class="who">{esc(n)}<span>{esc(o)}</span></div></div>'
