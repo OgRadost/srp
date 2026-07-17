@@ -771,8 +771,8 @@ def page_home():
     body = f"""
 <div class="hero" {hero_bg}>
   <div class="wrap">
-    <div class="kicker">Takes your rescue training</div>
-    <div class="disp">to the<br><span class="solid">next level</span></div>
+    <div class="kicker">Przenieś swój trening ratowniczy</div>
+    <div class="disp">na wyższy<br><span class="solid">poziom</span></div>
     <p>Szukasz sprzętu treningowego najwyższej jakości? Jesteśmy wyłącznym dystrybutorem szwedzkich
     manekinów ratowniczych i symulatorów ran SRP w Polsce. Skontaktuj się z nami, aby poznać
     właściwości produktów, ceny i dostępność.</p>
