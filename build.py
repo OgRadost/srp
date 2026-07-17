@@ -677,6 +677,10 @@ table.specs td,table.specs th{border-bottom:1px solid var(--line);padding-top:10
 .course{border:1px solid var(--line);padding:22px 26px;background:#fff}
 .course-ico{display:inline-block;width:54px;height:54px;margin-bottom:12px}
 .course-ico svg{width:100%;height:100%;display:block;filter:drop-shadow(0 1px 2px rgba(0,0,0,.18))}
+.certs{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start;margin-top:18px}
+.certs figure{width:150px;text-align:center}
+.certs img{width:100%;height:90px;object-fit:contain;background:#fff;border:1px solid var(--line);padding:10px}
+.certs figcaption{font-size:12.5px;color:var(--muted);margin-top:6px;text-transform:uppercase;letter-spacing:.5px}
 .course h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:22px}
 .course p{color:var(--muted);font-size:15px}
 
@@ -987,8 +991,30 @@ def page_product(p):
 """
     return head(p["name"], 1) + body + footer(1)
 
+CERT_DIR = os.path.join(IMG_DIR, "certyfikaty")
+
+def cert_logos():
+    """logotypy certyfikatów z img/certyfikaty/ (nazwa pliku = podpis)"""
+    if not os.path.isdir(CERT_DIR):
+        return []
+    return sorted(f for f in os.listdir(CERT_DIR)
+                  if f.lower().endswith((".png", ".jpg", ".jpeg", ".svg", ".webp")))
+
 def page_trainings():
     courses = "\n".join(f'<div class="course"><span class="course-ico">{i}</span><h3>{esc(n)}</h3><p>{esc(d)}</p></div>' for i, n, d in COURSES)
+    logos = cert_logos()
+    if logos:
+        certs = '<div class="certs">' + "".join(
+            f'<figure><img src="img/certyfikaty/{f}" alt="{esc(os.path.splitext(f)[0])}" loading="lazy">'
+            f'<figcaption>{esc(os.path.splitext(f)[0].replace("-", " ").replace("_", " "))}</figcaption></figure>'
+            for f in logos) + "</div>"
+    else:
+        certs = """<div class="trustbar" style="background:#f4f4f2;border:1px solid var(--line);margin-top:14px"><div class="wrap" style="padding:0">
+      <span>Wytyczne resuscytacji ERC</span>
+      <span>Program „Stop the Bleed”</span>
+      <span>Certyfikowani instruktorzy</span>
+      <span>Doświadczenie operacyjne służb</span>
+    </div></div>"""
     body = f"""
 <div class="page-head"><div class="wrap"><h1>Szkolenia</h1>
 <p>Szkolenia prowadzą certyfikowani instruktorzy z wieloletnim doświadczeniem w służbach
@@ -997,13 +1023,10 @@ Stop the Bleed, na realistycznych symulatorach ran SRP.</p></div></div>
 <section><div class="wrap">
   <div class="grid3">{courses}</div>
   <div style="margin-top:44px">
-    <h3>Uczymy według międzynarodowych standardów</h3>
-    <div class="trustbar" style="background:#f4f4f2;border:1px solid var(--line);margin-top:14px"><div class="wrap" style="padding:0">
-      <span>Wytyczne resuscytacji ERC</span>
-      <span>Program „Stop the Bleed”</span>
-      <span>Certyfikowani instruktorzy</span>
-      <span>Doświadczenie operacyjne służb</span>
-    </div></div>
+    <h3>Certyfikaty i standardy</h3>
+    <p class="lead" style="margin-top:8px">Nasi instruktorzy posiadają aktualne certyfikaty —
+    kursy prowadzimy według międzynarodowych wytycznych.</p>
+    {certs}
   </div>
   <p class="lead" style="margin-top:40px">Szkolimy w siedzibie klienta lub we wskazanym ośrodku, na sprzęcie,
   który potem możesz mieć u siebie. Zapytaj o program szyty na miarę Twojej organizacji.</p>
