@@ -453,6 +453,14 @@ i ośrodków szkoleniowych.</p>
     },
 ]
 
+# ---------------------------------------------------------------- opinie klientów
+# UWAGA: wpisuj wyłącznie PRAWDZIWE opinie za zgodą autora (fikcyjne recenzje to
+# nieuczciwa praktyka rynkowa). Format:
+# TESTIMONIALS = [
+#     ("Treść opinii…", "Imię Nazwisko / stopień", "Jednostka / organizacja"),
+# ]
+TESTIMONIALS = []
+
 # ---------------------------------------------------------------- szablon
 def esc(s): return html.escape(s, quote=False)
 
@@ -683,6 +691,16 @@ table.specs td,table.specs th{border-bottom:1px solid var(--line);padding-top:10
 .certs figure{width:150px;text-align:center}
 .certs img{width:100%;height:90px;object-fit:contain;background:#fff;border:1px solid var(--line);padding:10px}
 .certs figcaption{font-size:12.5px;color:var(--muted);margin-top:6px;text-transform:uppercase;letter-spacing:.5px}
+
+/* opinie */
+.quote{border:1px solid var(--line);background:#fff;padding:26px 28px;position:relative}
+.quote::before{content:"”";font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:64px;color:var(--yellow);position:absolute;top:2px;right:18px;line-height:1}
+.quote p{font-size:15.5px;color:var(--ink)}
+.quote .who{margin-top:16px;font-weight:700;font-size:14px}
+.quote .who span{display:block;font-weight:400;color:var(--muted);font-size:13px}
+.refbox{border:2px solid var(--yellow);background:#fffdf0;padding:30px 34px;margin-top:32px;max-width:760px}
+.refbox h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:24px;margin-bottom:8px}
+.refbox p{color:var(--muted);margin-bottom:18px}
 .course h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:22px}
 .course p{color:var(--muted);font-size:15px}
 
@@ -790,6 +808,18 @@ def page_home():
         for s in SEGMENTS
     )
     faqs = "\n".join(f'<details class="faq"><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in FAQS[:4])
+    if TESTIMONIALS:
+        quotes = ('<div class="grid3" style="margin-top:36px">' + "\n".join(
+            f'<div class="quote"><p>„{esc(t)}”</p><div class="who">{esc(n)}<span>{esc(o)}</span></div></div>'
+            for t, n, o in TESTIMONIALS) + "</div>")
+    else:
+        quotes = """<div class="refbox">
+      <h3>Twoja jednostka może być naszą pierwszą polską referencją</h3>
+      <p>Rozpoczynamy dystrybucję w Polsce i budujemy listę referencyjną. Umów bezpłatny pokaz,
+      przetestuj sprzęt w swoich procedurach — a jeśli spełni oczekiwania, Twoja opinia pojawi się
+      w tym miejscu.</p>
+      <a class="btn solid" href="zapytanie-ofertowe.html">Umów pokaz i przetestuj <span class="arr">→</span></a>
+    </div>"""
     hero_bg = ('style="background-image:linear-gradient(rgba(10,12,8,.55),rgba(10,12,8,.7)),'
                "url('img/home-01.jpg');background-size:cover;background-position:center\"") if main_image("home") else ""
     body = f"""
@@ -876,6 +906,18 @@ def page_home():
     od podstawowej RKO po taktyczną opiekę nad poszkodowanym.</p>
     <div class="grid3" style="margin-top:36px">{courses}</div>
     <div style="margin-top:36px">{btn("szkolenia.html", "Zobacz wszystkie szkolenia")}</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <span class="badge">Zaufanie i opinie</span>
+    <h2>Sprawdzeni w codziennej służbie</h2>
+    <p class="lead">Produkty SRP od 2009 roku pracują na co dzień w jednostkach straży pożarnej,
+    policji, wojska, ratownictwa medycznego i morskiego — wszędzie tam, gdzie sprzęt musi wytrzymać
+    setki ćwiczeń rocznie. Producent został wyróżniony m.in. nagrodą zrównoważonego rozwoju (2025),
+    a jego rozwiązania opisywały media branżowe i ogólnokrajowe w Szwecji.</p>
+    {quotes}
   </div>
 </section>
 

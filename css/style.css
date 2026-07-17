@@ -97,6 +97,16 @@ table.specs td,table.specs th{border-bottom:1px solid var(--line);padding-top:10
 .certs figure{width:150px;text-align:center}
 .certs img{width:100%;height:90px;object-fit:contain;background:#fff;border:1px solid var(--line);padding:10px}
 .certs figcaption{font-size:12.5px;color:var(--muted);margin-top:6px;text-transform:uppercase;letter-spacing:.5px}
+
+/* opinie */
+.quote{border:1px solid var(--line);background:#fff;padding:26px 28px;position:relative}
+.quote::before{content:"”";font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:64px;color:var(--yellow);position:absolute;top:2px;right:18px;line-height:1}
+.quote p{font-size:15.5px;color:var(--ink)}
+.quote .who{margin-top:16px;font-weight:700;font-size:14px}
+.quote .who span{display:block;font-weight:400;color:var(--muted);font-size:13px}
+.refbox{border:2px solid var(--yellow);background:#fffdf0;padding:30px 34px;margin-top:32px;max-width:760px}
+.refbox h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:24px;margin-bottom:8px}
+.refbox p{color:var(--muted);margin-bottom:18px}
 .course h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:22px}
 .course p{color:var(--muted);font-size:15px}
 
