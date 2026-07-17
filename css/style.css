@@ -107,6 +107,7 @@ table.specs td,table.specs th{border-bottom:1px solid var(--line);padding-top:10
 .refbox{border:2px solid var(--yellow);background:#fffdf0;padding:30px 34px;margin-top:32px;max-width:760px}
 .refbox h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:24px;margin-bottom:8px}
 .refbox p{color:var(--muted);margin-bottom:18px}
+.clients figcaption.only-name{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:18px;color:var(--ink);text-transform:none;letter-spacing:0;border:1px solid var(--line);padding:18px 20px;background:#fff}
 .course h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:22px}
 .course p{color:var(--muted);font-size:15px}
 

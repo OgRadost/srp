@@ -461,6 +461,13 @@ i ośrodków szkoleniowych.</p>
 # ]
 TESTIMONIALS = []
 
+# „Zaufali nam” — nazwy odbiorców, którym sprzedano sprzęt.
+# UWAGA: publikuj nazwę jednostki/firmy tylko po jej zgodzie na referencję
+# (przy instytucjach publicznych zwykle wystarczy zgoda mailowa osoby decyzyjnej).
+# Format: ("Nazwa odbiorcy", "opcjonalny-plik-logo.png" lub None)
+# Logo wrzuć do img/klienci/
+CLIENTS = []
+
 # ---------------------------------------------------------------- szablon
 def esc(s): return html.escape(s, quote=False)
 
@@ -701,6 +708,7 @@ table.specs td,table.specs th{border-bottom:1px solid var(--line);padding-top:10
 .refbox{border:2px solid var(--yellow);background:#fffdf0;padding:30px 34px;margin-top:32px;max-width:760px}
 .refbox h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:24px;margin-bottom:8px}
 .refbox p{color:var(--muted);margin-bottom:18px}
+.clients figcaption.only-name{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:18px;color:var(--ink);text-transform:none;letter-spacing:0;border:1px solid var(--line);padding:18px 20px;background:#fff}
 .course h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:22px}
 .course p{color:var(--muted);font-size:15px}
 
@@ -808,10 +816,19 @@ def page_home():
         for s in SEGMENTS
     )
     faqs = "\n".join(f'<details class="faq"><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in FAQS[:4])
+    clients_html = ""
+    if CLIENTS:
+        items = "".join(
+            (f'<figure><img src="img/klienci/{logo}" alt="{esc(name)}" loading="lazy"><figcaption>{esc(name)}</figcaption></figure>'
+             if logo else f'<figure><figcaption class="only-name">{esc(name)}</figcaption></figure>')
+            for name, logo in CLIENTS)
+        clients_html = f'<h3 style="margin-top:38px">Zaufali nam</h3><div class="certs clients">{items}</div>'
     if TESTIMONIALS:
         quotes = ('<div class="grid3" style="margin-top:36px">' + "\n".join(
             f'<div class="quote"><p>„{esc(t)}”</p><div class="who">{esc(n)}<span>{esc(o)}</span></div></div>'
-            for t, n, o in TESTIMONIALS) + "</div>")
+            for t, n, o in TESTIMONIALS) + "</div>") + clients_html
+    elif CLIENTS:
+        quotes = clients_html
     else:
         quotes = """<div class="refbox">
       <h3>Twoja jednostka może być naszą pierwszą polską referencją</h3>
