@@ -463,7 +463,8 @@ TESTIMONIALS = []
 
 # „Meldunek: fantomy w służbie” — dziennik wdrożeń (anonimizowany, bez nazw odbiorców,
 # więc nie wymaga zgód na referencję; wpisuj wyłącznie rzeczywiste dostawy).
-# Format: ("RRRR-MM", "model sprzętu", "typ jednostki", "region")
+# Format: ("RRRR-MM", "model sprzętu", "typ jednostki", "region", "logo.png" lub None)
+# Logo (opcjonalne, wymaga zgody jednostki) wrzuć do img/klienci/
 DEPLOYMENTS = []
 
 # ---------------------------------------------------------------- szablon
@@ -715,6 +716,9 @@ table.specs td,table.specs th{border-bottom:1px solid var(--line);padding-top:10
 .m-stats{font-size:13.5px;color:#9a9a9a;margin:8px 0 18px;text-transform:uppercase;letter-spacing:1px}
 .m-stats b{color:var(--yellow)}
 .deploy{display:flex;align-items:center;gap:18px;padding:13px 0;border-top:1px solid #2b2b2b}
+.d-logo{width:46px;height:46px;border-radius:50%;background:#242424;border:1px solid #383838;display:flex;align-items:center;justify-content:center;flex:none;overflow:hidden}
+.d-logo svg{width:26px;height:26px}
+.d-logo img{width:100%;height:100%;object-fit:contain;padding:5px;background:#fff}
 .d-date{font-family:'Barlow Condensed';font-weight:800;font-style:italic;color:var(--yellow);font-size:17px;min-width:74px}
 .d-body{flex:1;display:flex;flex-direction:column}
 .d-body strong{font-size:15.5px}
@@ -831,17 +835,31 @@ def page_home():
     faqs = "\n".join(f'<details class="faq"><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in FAQS[:4])
     deploys_html = ""
     if DEPLOYMENTS:
+        def odm(n, one, few, many):
+            if n == 1: return one
+            if 2 <= n % 10 <= 4 and not 12 <= n % 100 <= 14: return few
+            return many
         n_units = len(DEPLOYMENTS)
         n_regions = len({d[3] for d in DEPLOYMENTS})
+        w_odm = odm(n_units, "wdrożenie", "wdrożenia", "wdrożeń")
+        r_odm = odm(n_regions, "region", "regiony", "regionów")
+        shield = ('<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6l14 5v11c0 9-6 16.4-14 20'
+                  'C16 38.4 10 31 10 22V11z" fill="none" stroke="#4a4a4a" stroke-width="2.5"/>'
+                  '<path d="M21 17h6v4h4v6h-4v4h-6v-4h-4v-6h4z" fill="#4a4a4a"/></svg>')
+        def d_logo(entry):
+            logo = entry[4] if len(entry) > 4 and entry[4] else None
+            if logo and os.path.exists(os.path.join(IMG_DIR, "klienci", logo)):
+                return f'<span class="d-logo"><img src="img/klienci/{logo}" alt="logo jednostki" loading="lazy"></span>'
+            return f'<span class="d-logo">{shield}</span>'
         rows = "\n".join(
-            f'''<div class="deploy"><span class="d-date">{esc(dt)}</span>
-            <div class="d-body"><strong>{esc(model)}</strong><span>{esc(unit)} · {esc(region)}</span></div>
+            f'''<div class="deploy">{d_logo(e)}<span class="d-date">{esc(e[0])}</span>
+            <div class="d-body"><strong>{esc(e[1])}</strong><span>{esc(e[2])} · {esc(e[3])}</span></div>
             <span class="stamp">W SŁUŻBIE</span></div>'''
-            for dt, model, unit, region in DEPLOYMENTS)
+            for e in DEPLOYMENTS)
         deploys_html = f'''
         <div class="meldunek">
           <div class="m-head"><span class="m-dot"></span> MELDUNEK: FANTOMY W SŁUŻBIE</div>
-          <div class="m-stats"><b>{n_units}</b> wdrożeń &nbsp;·&nbsp; <b>{n_regions}</b> regionów &nbsp;·&nbsp; status: <b>operacyjne</b></div>
+          <div class="m-stats"><b>{n_units}</b> {w_odm} &nbsp;·&nbsp; <b>{n_regions}</b> {r_odm} &nbsp;·&nbsp; status: <b>operacyjne</b></div>
           {rows}
           <div class="m-foot">Dziennik aktualizowany po każdej dostawie. Nazwy jednostek publikujemy wyłącznie za ich zgodą.</div>
         </div>'''
