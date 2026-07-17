@@ -627,7 +627,7 @@ def render_meldunek(deps):
         <span class="stamp">W SŁUŻBIE</span></div>'''
         for e in deps)
     return f'''
-    <div class="meldunek">
+    <div class="meldunek" id="meldunek">
       <div class="m-head"><span class="m-dot"></span> MELDUNEK: FANTOMY W SŁUŻBIE</div>
       <div class="m-stats"><b data-n="{n_units}">0</b> {w_odm} &nbsp;·&nbsp; <b data-n="{n_regions}">0</b> {r_odm} &nbsp;·&nbsp; status: <b>operacyjne</b></div>
       <div class="m-viewport"><div class="m-track">
