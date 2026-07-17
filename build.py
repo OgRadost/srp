@@ -268,11 +268,13 @@ ICO_STAR_LIFE = """<svg viewBox="0 0 48 48" role="img" aria-label="Służby rato
 ICO_CHILD = """<svg viewBox="0 0 48 48" role="img" aria-label="RKO dzieci"><rect width="48" height="48" rx="8" fill="#009639"/><path d="M19 34c-6-4.4-10-8.2-10-13a6 6 0 0 1 10.4-4A6 6 0 0 1 29.8 21c0 4.8-4.8 8.6-10.8 13z" fill="#fff"/><path d="M34 42c-4.2-3-7-5.7-7-9a4.2 4.2 0 0 1 7.3-2.8A4.2 4.2 0 0 1 41.6 33c0 3.3-3.4 6-7.6 9z" fill="#fff"/></svg>"""
 ICO_FIRST_AID = """<svg viewBox="0 0 48 48" role="img" aria-label="Pierwsza pomoc"><rect width="48" height="48" rx="8" fill="#009639"/><path d="M19 9h10v10h10v10H29v10H19V29H9V19h10z" fill="#fff"/></svg>"""
 ICO_INSTRUCTOR = """<svg viewBox="0 0 48 48" role="img" aria-label="Kursy instruktorskie"><rect width="48" height="48" rx="8" fill="#0057a8"/><path d="M24 12 4 20l20 8 14-5.6V31h4v-9.4z" fill="#fff"/><path d="M14 27.8V34c0 2.8 4.5 5 10 5s10-2.2 10-5v-6.2l-10 4z" fill="#fff"/></svg>"""
+ICO_TECC = """<svg viewBox="0 0 48 48" role="img" aria-label="TECC"><rect width="48" height="48" rx="8" fill="#3d4a3a"/><path d="M24 6l14 5v11c0 9-6 16.4-14 20C16 38.4 10 31 10 22V11z" fill="#fff"/><path d="M21 16h6v5h5v6h-5v5h-6v-5h-5v-6h5z" fill="#3d4a3a"/></svg>"""
 
 COURSES = [
     (ICO_STOP_BLEED, "Stop the Bleed — zatrzymaj krwotok", "Międzynarodowo certyfikowany kurs kontroli krwotoków: staza, packing rany, opatrunek uciskowy. Zajęcia na realistycznych symulatorach ran SRP."),
     (ICO_AED, "RKO osób dorosłych", "Podstawowa resuscytacja krążeniowo-oddechowa z użyciem AED."),
     (ICO_STAR_LIFE, "RKO dla służb i personelu interwencyjnego", "Rozszerzony program dla strażaków, policjantów i ratowników — praca w zespole, scenariusze."),
+    (ICO_TECC, "TECC — taktyczna opieka nad poszkodowanym", "Tactical Emergency Casualty Care: postępowanie z poszkodowanym urazowym w środowisku zagrożenia — dla służb mundurowych i zespołów interwencyjnych. Prowadzą instruktorzy z certyfikatem TECC."),
     (ICO_CHILD, "RKO dzieci i wypadki z udziałem dzieci", "Resuscytacja niemowląt i dzieci, postępowanie przy zadławieniu i najczęstszych urazach."),
     (ICO_FIRST_AID, "Pierwsza pomoc S-XABCDE", "Systematyczne badanie i zaopatrywanie poszkodowanego według schematu XABCDE."),
     (ICO_INSTRUCTOR, "Kursy instruktorskie", "Przygotowanie instruktorów RKO (dorośli / dzieci / służby) i pierwszej pomocy — prowadzone przez certyfikowanych wykładowców z doświadczeniem operacyjnym."),
@@ -869,9 +871,9 @@ def page_home():
   <div class="wrap">
     <span class="badge">Szkolenia</span>
     <h2>Instruktorzy z doświadczeniem operacyjnym</h2>
-    <p class="lead">Oferujemy szkolenia prowadzone przez certyfikowanych instruktorów z wieloletnim
-    doświadczeniem w służbach interwencyjnych — od podstawowej RKO po międzynarodowo certyfikowane
-    kursy Stop the Bleed.</p>
+    <p class="lead">Oferujemy szkolenia prowadzone przez instruktorów z międzynarodowymi certyfikatami
+    Stop the Bleed®, ERC i TECC oraz wieloletnim doświadczeniem w służbach interwencyjnych —
+    od podstawowej RKO po taktyczną opiekę nad poszkodowanym.</p>
     <div class="grid3" style="margin-top:36px">{courses}</div>
     <div style="margin-top:36px">{btn("szkolenia.html", "Zobacz wszystkie szkolenia")}</div>
   </div>
@@ -1010,16 +1012,17 @@ def page_trainings():
             for f in logos) + "</div>"
     else:
         certs = """<div class="trustbar" style="background:#f4f4f2;border:1px solid var(--line);margin-top:14px"><div class="wrap" style="padding:0">
+      <span>Stop the Bleed® — certyfikowani instruktorzy</span>
       <span>Wytyczne resuscytacji ERC</span>
-      <span>Program „Stop the Bleed”</span>
-      <span>Certyfikowani instruktorzy</span>
+      <span>TECC — Tactical Emergency Casualty Care</span>
       <span>Doświadczenie operacyjne służb</span>
     </div></div>"""
     body = f"""
 <div class="page-head"><div class="wrap"><h1>Szkolenia</h1>
-<p>Szkolenia prowadzą certyfikowani instruktorzy z wieloletnim doświadczeniem w służbach
-interwencyjnych. Kursy kontroli krwotoków realizujemy według międzynarodowych standardów
-Stop the Bleed, na realistycznych symulatorach ran SRP.</p></div></div>
+<p>Szkolenia prowadzą instruktorzy z wieloletnim doświadczeniem w służbach interwencyjnych,
+posiadający międzynarodowe certyfikaty: Stop the Bleed®, wytycznych resuscytacji ERC oraz
+TECC (Tactical Emergency Casualty Care). Zajęcia praktyczne odbywają się na realistycznych
+symulatorach ran i manekinach SRP.</p></div></div>
 <section><div class="wrap">
   <div class="grid3">{courses}</div>
   <div style="margin-top:44px">
