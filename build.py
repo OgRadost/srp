@@ -597,6 +597,74 @@ def write(path, content):
         f.write(content)
     print("✓", path)
 
+def render_meldunek(deps):
+    """sekcja „Meldunek: fantomy w służbie” — licznik + karuzela wpisów"""
+    def odm(n, one, few, many):
+        if n == 1: return one
+        if 2 <= n % 10 <= 4 and not 12 <= n % 100 <= 14: return few
+        return many
+    n_units = len(deps)
+    n_regions = len({d[3] for d in deps})
+    w_odm = odm(n_units, "wdrożenie", "wdrożenia", "wdrożeń")
+    r_odm = odm(n_regions, "region", "regiony", "regionów")
+    shield = ('<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6l14 5v11c0 9-6 16.4-14 20'
+              'C16 38.4 10 31 10 22V11z" fill="none" stroke="#4a4a4a" stroke-width="2.5"/>'
+              '<path d="M21 17h6v4h4v6h-4v4h-6v-4h-4v-6h4z" fill="#4a4a4a"/></svg>')
+    def d_logo(entry):
+        logo = entry[4] if len(entry) > 4 and entry[4] else None
+        if logo and os.path.exists(os.path.join(IMG_DIR, "klienci", logo)):
+            return f'<span class="d-logo"><img src="img/klienci/{logo}" alt="logo jednostki" loading="lazy"></span>'
+        return f'<span class="d-logo">{shield}</span>'
+    rows = "\n".join(
+        f'''<div class="deploy">{d_logo(e)}<span class="d-date">{esc(e[0])}</span>
+        <div class="d-body"><strong>{esc(e[1])}</strong><span>{esc(e[2])} · {esc(e[3])}</span></div>
+        <span class="stamp">W SŁUŻBIE</span></div>'''
+        for e in deps)
+    return f'''
+    <div class="meldunek">
+      <div class="m-head"><span class="m-dot"></span> MELDUNEK: FANTOMY W SŁUŻBIE</div>
+      <div class="m-stats"><b data-n="{n_units}">0</b> {w_odm} &nbsp;·&nbsp; <b data-n="{n_regions}">0</b> {r_odm} &nbsp;·&nbsp; status: <b>operacyjne</b></div>
+      <div class="m-viewport"><div class="m-track">
+      {rows}
+      </div></div>
+      <div class="m-foot">Dziennik aktualizowany po każdej dostawie. Nazwy jednostek publikujemy wyłącznie za ich zgodą.</div>
+    </div>
+    <script>
+    (function(){{
+      var track=document.querySelector('.m-track'); if(!track) return;
+      var vp=document.querySelector('.m-viewport'), VISIBLE=3;
+      function setH(){{ var s=0,i; for(i=0;i<VISIBLE&&i<track.children.length;i++) s+=track.children[i].offsetHeight; vp.style.height=s+'px'; }}
+      if(track.children.length>VISIBLE){{
+        setH(); window.addEventListener('resize',setH);
+        setInterval(function(){{
+          var h=track.children[0].offsetHeight;
+          track.style.transition='transform .6s ease';
+          track.style.transform='translateY(-'+h+'px)';
+          track.addEventListener('transitionend',function te(){{
+            track.removeEventListener('transitionend',te);
+            track.style.transition='none';
+            track.appendChild(track.children[0]);
+            track.style.transform='translateY(0)';
+            setH();
+          }});
+        }},3200);
+      }}
+      var nums=document.querySelectorAll('.m-stats b[data-n]');
+      var io=new IntersectionObserver(function(es){{
+        es.forEach(function(e){{
+          if(!e.isIntersecting) return; io.unobserve(e.target);
+          var end=+e.target.getAttribute('data-n'), t0=performance.now(), dur=1400;
+          requestAnimationFrame(function step(t){{
+            var p=Math.min(1,(t-t0)/dur);
+            e.target.textContent=Math.round(end*(1-Math.pow(1-p,3)));
+            if(p<1) requestAnimationFrame(step);
+          }});
+        }});
+      }},{{threshold:.4}});
+      nums.forEach(function(n){{io.observe(n);}});
+    }})();
+    </script>'''
+
 # ---------------------------------------------------------------- CSS
 CSS = """
 :root{
@@ -835,73 +903,7 @@ def page_home():
         for s in SEGMENTS
     )
     faqs = "\n".join(f'<details class="faq"><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in FAQS[:4])
-    deploys_html = ""
-    if DEPLOYMENTS:
-        def odm(n, one, few, many):
-            if n == 1: return one
-            if 2 <= n % 10 <= 4 and not 12 <= n % 100 <= 14: return few
-            return many
-        n_units = len(DEPLOYMENTS)
-        n_regions = len({d[3] for d in DEPLOYMENTS})
-        w_odm = odm(n_units, "wdrożenie", "wdrożenia", "wdrożeń")
-        r_odm = odm(n_regions, "region", "regiony", "regionów")
-        shield = ('<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6l14 5v11c0 9-6 16.4-14 20'
-                  'C16 38.4 10 31 10 22V11z" fill="none" stroke="#4a4a4a" stroke-width="2.5"/>'
-                  '<path d="M21 17h6v4h4v6h-4v4h-6v-4h-4v-6h4z" fill="#4a4a4a"/></svg>')
-        def d_logo(entry):
-            logo = entry[4] if len(entry) > 4 and entry[4] else None
-            if logo and os.path.exists(os.path.join(IMG_DIR, "klienci", logo)):
-                return f'<span class="d-logo"><img src="img/klienci/{logo}" alt="logo jednostki" loading="lazy"></span>'
-            return f'<span class="d-logo">{shield}</span>'
-        rows = "\n".join(
-            f'''<div class="deploy">{d_logo(e)}<span class="d-date">{esc(e[0])}</span>
-            <div class="d-body"><strong>{esc(e[1])}</strong><span>{esc(e[2])} · {esc(e[3])}</span></div>
-            <span class="stamp">W SŁUŻBIE</span></div>'''
-            for e in DEPLOYMENTS)
-        deploys_html = f'''
-        <div class="meldunek">
-          <div class="m-head"><span class="m-dot"></span> MELDUNEK: FANTOMY W SŁUŻBIE</div>
-          <div class="m-stats"><b data-n="{n_units}">0</b> {w_odm} &nbsp;·&nbsp; <b data-n="{n_regions}">0</b> {r_odm} &nbsp;·&nbsp; status: <b>operacyjne</b></div>
-          <div class="m-viewport"><div class="m-track">
-          {rows}
-          </div></div>
-          <div class="m-foot">Dziennik aktualizowany po każdej dostawie. Nazwy jednostek publikujemy wyłącznie za ich zgodą.</div>
-        </div>
-        <script>
-        (function(){{
-          var track=document.querySelector('.m-track'); if(!track) return;
-          var vp=document.querySelector('.m-viewport'), VISIBLE=3;
-          function setH(){{ var s=0,i; for(i=0;i<VISIBLE&&i<track.children.length;i++) s+=track.children[i].offsetHeight; vp.style.height=s+'px'; }}
-          if(track.children.length>VISIBLE){{
-            setH(); window.addEventListener('resize',setH);
-            setInterval(function(){{
-              var h=track.children[0].offsetHeight;
-              track.style.transition='transform .6s ease';
-              track.style.transform='translateY(-'+h+'px)';
-              track.addEventListener('transitionend',function te(){{
-                track.removeEventListener('transitionend',te);
-                track.style.transition='none';
-                track.appendChild(track.children[0]);
-                track.style.transform='translateY(0)';
-                setH();
-              }});
-            }},3200);
-          }}
-          var nums=document.querySelectorAll('.m-stats b[data-n]');
-          var io=new IntersectionObserver(function(es){{
-            es.forEach(function(e){{
-              if(!e.isIntersecting) return; io.unobserve(e.target);
-              var end=+e.target.getAttribute('data-n'), t0=performance.now(), dur=1400;
-              requestAnimationFrame(function step(t){{
-                var p=Math.min(1,(t-t0)/dur);
-                e.target.textContent=Math.round(end*(1-Math.pow(1-p,3)));
-                if(p<1) requestAnimationFrame(step);
-              }});
-            }});
-          }},{{threshold:.4}});
-          nums.forEach(function(n){{io.observe(n);}});
-        }})();
-        </script>'''
+    deploys_html = render_meldunek(DEPLOYMENTS) if DEPLOYMENTS else ""
     if TESTIMONIALS:
         quotes = ('<div class="grid3" style="margin-top:36px">' + "\n".join(
             f'<div class="quote"><p>„{esc(t)}”</p><div class="who">{esc(n)}<span>{esc(o)}</span></div></div>'
@@ -1528,6 +1530,24 @@ def page_privacy():
 """
     return head("Polityka prywatności") + body + footer()
 
+def page_meldunek_preview():
+    sample = [
+        ("2026-06", "Manekin PRO ELITE MILITARY 80 kg", "jednostka wojskowa", "Polska południowa", None),
+        ("2026-06", "Symulatory ran — zestaw instruktorski", "ośrodek szkoleniowy", "woj. mazowieckie", None),
+        ("2026-07", "Manekin Standard 70 kg × 2", "PSP", "woj. pomorskie", None),
+        ("2026-07", "Manekin z funkcją RKO", "szpital", "woj. śląskie", None),
+        ("2026-07", "Manekin wodny pływający", "WOPR", "woj. warmińsko-mazurskie", None),
+    ]
+    body = f"""
+<div class="page-head"><div class="wrap"><h1>Podgląd sekcji „Meldunek”</h1>
+<p>⚠️ Strona robocza, nielinkowana z serwisu. Wpisy poniżej to DANE PRZYKŁADOWE — pokazują,
+jak sekcja będzie wyglądać na stronie głównej po wpisaniu prawdziwych dostaw.</p></div></div>
+<section><div class="wrap">
+{render_meldunek(sample)}
+</div></section>
+"""
+    return head("Podgląd meldunku (dane przykładowe)") + body + footer()
+
 def write_seo_files():
     pages = (["index.html", "produkty/index.html"]
              + [f"produkty/{p['slug']}.html" for p in PRODUCTS]
@@ -1560,6 +1580,7 @@ def main():
     write("do-pobrania.html", page_downloads())
     write("faq.html", page_faq())
     write("polityka-prywatnosci.html", page_privacy())
+    write("podglad-meldunek.html", page_meldunek_preview())
     write("wiedza/index.html", page_articles_index())
     for a in ARTICLES:
         write(f"wiedza/{a['slug']}.html", page_article(a))
