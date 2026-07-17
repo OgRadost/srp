@@ -10,9 +10,10 @@ import os, html, json
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
 BRAND = "SRP Polska"
-DISTRIBUTOR = "[NAZWA TWOJEJ FIRMY] — wyłączny dystrybutor SRP w Polsce"
-PHONE = "+48 000 000 000"
-EMAIL = "biuro@twojadomena.pl"
+DISTRIBUTOR = "Wyłączny dystrybutor produktów SRP w Polsce"
+PHONE = "+48 000 000 000"          # [do uzupełnienia]
+EMAIL = "biuro@twojadomena.pl"     # [do uzupełnienia]
+BASE_URL = "https://ogradost.github.io/srp"  # [docelowo własna domena]
 
 # ---------------------------------------------------------------- produkty
 PRODUCTS = [
@@ -494,6 +495,13 @@ def head(title, depth=0):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(title)} | {BRAND}</title>
 <meta name="description" content="Szwedzkie manekiny ratownicze i symulatory ran SRP — wyłączny dystrybutor w Polsce. Realistyczny sprzęt treningowy dla straży pożarnej, wojska, ratownictwa medycznego i wodnego.">
+<link rel="icon" type="image/svg+xml" href="{p}img/srp-logo.svg">
+<meta property="og:title" content="{esc(title)} | {BRAND}">
+<meta property="og:description" content="Szwedzkie manekiny ratownicze i symulatory ran SRP — wyłączny dystrybutor w Polsce.">
+<meta property="og:image" content="{BASE_URL}/img/home-01.jpg">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pl_PL">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,600;1,800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -526,8 +534,8 @@ def footer(depth=0):
     <div>
       <h4>{BRAND}</h4>
       <p>{DISTRIBUTOR}</p>
-      <p>[ulica i numer]<br>[kod pocztowy, miasto]</p>
       <p><a href="tel:{PHONE.replace(' ', '')}">{PHONE}</a><br><a href="mailto:{EMAIL}">{EMAIL}</a></p>
+      <p><a href="{p}polityka-prywatnosci.html">Polityka prywatności</a></p>
     </div>
     <div>
       <h4>Producent</h4>
@@ -678,7 +686,7 @@ footer a{color:#d6d6d6}
 .copyright{border-top:1px solid #2a2a2a;margin-top:40px;padding-top:18px;font-size:12.5px;color:#8a8a8a}
 
 /* podstrony — nagłówek */
-.page-head{background:var(--black);color:#fff;padding:64px 0}
+.page-head{background:linear-gradient(rgba(10,10,10,.82),rgba(10,10,10,.88)),url("../img/home-02.jpg") center/cover,var(--black);color:#fff;padding:72px 0}
 .page-head h1{font-size:clamp(34px,5vw,58px);color:var(--yellow)}
 .page-head p{color:#c9c9c9;max-width:760px;margin-top:10px}
 
@@ -1081,8 +1089,13 @@ def page_about():
   <div>
     <span class="badge">Dystrybutor</span>
     <h2>{BRAND}</h2>
-    <p class="lead">[Tu opis Twojej firmy: doświadczenie w branży ratowniczej/szkoleniowej, zakres
-    wyłączności, wsparcie serwisowe i szkoleniowe, referencje. 2–3 akapity.]</p>
+    <p class="lead">Jesteśmy wyłącznym dystrybutorem produktów SRP na rynku polskim. Zapewniamy pełną
+    obsługę w języku polskim: doradztwo w doborze sprzętu do scenariuszy ćwiczeń, bezpłatne pokazy
+    w siedzibie klienta, wsparcie zamówień publicznych, serwis i części oraz szkolenia z użyciem
+    dostarczanego sprzętu.</p>
+    <p class="lead" style="margin-top:14px">Współpracujemy bezpośrednio z producentem w Szwecji, dzięki
+    czemu oferujemy pełną konfigurowalność produktów — od niestandardowych mas manekinów po dobór
+    modułów urazowych pod konkretne programy szkoleniowe.</p>
   </div>
 </div></section>
 """
@@ -1092,13 +1105,16 @@ def page_news():
     body = f"""
 <div class="page-head"><div class="wrap"><h1>Aktualności</h1>
 <p>Wdrożenia, targi, nowe produkty i terminy szkoleń.</p></div></div>
-<section><div class="wrap grid3">
-  <div class="card">{placeholder("Zdjęcie aktualności")}<div class="body"><h3>Startujemy w Polsce</h3>
-  <p>Rozpoczynamy oficjalną dystrybucję produktów SRP na rynku polskim. [Uzupełnij treść ogłoszenia.]</p></div></div>
-  <div class="card">{placeholder("Zdjęcie aktualności")}<div class="body"><h3>[Tytuł wpisu]</h3>
-  <p>[Krótka zajawka wpisu — targi, pokaz, wdrożenie u klienta.]</p></div></div>
-  <div class="card">{placeholder("Zdjęcie aktualności")}<div class="body"><h3>[Tytuł wpisu]</h3>
-  <p>[Krótka zajawka wpisu.]</p></div></div>
+<section><div class="wrap">
+  <div class="grid3">
+  <div class="card">{pic("home-05.jpg", "Produkty SRP")}<div class="body"><h3>Produkty SRP oficjalnie w Polsce</h3>
+  <p>Rozpoczynamy oficjalną, wyłączną dystrybucję szwedzkich manekinów ratowniczych i symulatorów ran
+  SRP na rynku polskim. Zapraszamy jednostki i ośrodki szkoleniowe na bezpłatne pokazy sprzętu.</p>
+  {btn("zapytanie-ofertowe.html", "Umów pokaz")}</div></div>
+  </div>
+  <p class="lead" style="margin-top:34px">Tu będą pojawiać się informacje o targach, pokazach,
+  wdrożeniach u klientów i nowościach produktowych. Chcesz je dostawać na skrzynkę?
+  <a href="wiedza/index.html"><strong>Zapisz się na nasze materiały →</strong></a></p>
 </div></section>
 """
     return head("Aktualności") + body + footer()
@@ -1109,11 +1125,10 @@ def page_contact():
 <section><div class="wrap grid2" style="align-items:start">
   <div>
     <h3>{BRAND}</h3>
-    <p>{DISTRIBUTOR}<br>[ulica i numer]<br>[kod pocztowy, miasto]<br>NIP: [—] &nbsp; REGON: [—]</p>
+    <p>{DISTRIBUTOR}</p>
     <p style="margin-top:14px"><strong>Telefon:</strong> <a href="tel:{PHONE.replace(' ', '')}">{PHONE}</a><br>
-    <strong>Biuro:</strong> <a href="mailto:{EMAIL}">{EMAIL}</a><br>
-    <strong>Sprzedaż:</strong> [sprzedaz@…]<br>
-    <strong>Szkolenia:</strong> [szkolenia@…]</p>
+    <strong>E-mail:</strong> <a href="mailto:{EMAIL}">{EMAIL}</a></p>
+    <p class="note" style="margin-top:10px">Pełne dane rejestrowe firmy uzupełnimy wkrótce.</p>
     <h3 style="margin-top:30px">Producent</h3>
     <p>Svenska Räddningsprodukter AB<br>Bergslagsgatan 1F, SE-733 31 Sala, Szwecja</p>
   </div>
@@ -1298,6 +1313,38 @@ def page_article(a):
 """
     return head(a["title"], 1) + body + footer(1)
 
+def page_privacy():
+    body = f"""
+<div class="page-head"><div class="wrap"><h1>Polityka prywatności</h1>
+<p>Szkic do weryfikacji prawnej — [uzupełnij dane administratora przed publikacją docelową].</p></div></div>
+<section><div class="wrap" style="max-width:860px">
+  <h3>1. Administrator danych</h3>
+  <p>Administratorem danych osobowych jest {BRAND} [pełna nazwa, adres, NIP — do uzupełnienia].
+  Kontakt w sprawach danych osobowych: {EMAIL}.</p>
+  <h3 style="margin-top:26px">2. Jakie dane przetwarzamy i po co</h3>
+  <p>Przetwarzamy wyłącznie dane przekazane dobrowolnie w formularzach: imię i nazwisko, nazwę
+  organizacji, adres e-mail, numer telefonu, NIP oraz treść wiadomości — w celu obsługi zapytania
+  ofertowego lub kontaktowego (art. 6 ust. 1 lit. b i f RODO), a po zapisie na materiały — w celu ich
+  wysyłki (art. 6 ust. 1 lit. a RODO, zgoda).</p>
+  <h3 style="margin-top:26px">3. Okres przechowywania</h3>
+  <p>Dane z zapytań przechowujemy przez okres prowadzenia korespondencji i wymagany przepisami
+  (np. podatkowymi przy zawarciu umowy). Dane newslettera — do wycofania zgody.</p>
+  <h3 style="margin-top:26px">4. Odbiorcy danych</h3>
+  <p>Dane mogą być powierzane podmiotom obsługującym naszą pocztę, hosting i formularze
+  [wymień dostawców po podpięciu, np. operator formularzy] — wyłącznie w zakresie niezbędnym
+  do świadczenia tych usług.</p>
+  <h3 style="margin-top:26px">5. Twoje prawa</h3>
+  <p>Masz prawo dostępu do danych, ich sprostowania, usunięcia, ograniczenia przetwarzania,
+  przenoszenia, sprzeciwu oraz wniesienia skargi do Prezesa UODO. Wycofanie zgody nie wpływa
+  na zgodność z prawem wcześniejszego przetwarzania.</p>
+  <h3 style="margin-top:26px">6. Pliki cookies</h3>
+  <p>Strona nie używa własnych plików cookies ani narzędzi śledzących. Czcionki ładowane są
+  z Google Fonts (Google LLC może rejestrować adres IP przy pobraniu czcionki). [Zaktualizuj
+  po dodaniu analityki.]</p>
+</div></section>
+"""
+    return head("Polityka prywatności") + body + footer()
+
 def write_seo_files():
     pages = (["index.html", "produkty/index.html"]
              + [f"produkty/{p['slug']}.html" for p in PRODUCTS]
@@ -1305,8 +1352,8 @@ def write_seo_files():
                 "do-pobrania.html", "faq.html", "wiedza/index.html"]
              + [f"wiedza/{a['slug']}.html" for a in ARTICLES]
              + ["szkolenia.html", "warunki-zakupu.html", "zapytanie-ofertowe.html",
-                "o-nas.html", "aktualnosci.html", "kontakt.html"])
-    base = "https://www.twojadomena.pl"  # [podmień na docelową domenę]
+                "o-nas.html", "aktualnosci.html", "kontakt.html", "polityka-prywatnosci.html"])
+    base = BASE_URL
     urls = "\n".join(f"  <url><loc>{base}/{u}</loc></url>" for u in pages)
     write("sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}\n</urlset>\n')
     write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {base}/sitemap.xml\n")
@@ -1329,6 +1376,7 @@ def main():
     write("zamowienia-publiczne.html", page_tenders())
     write("do-pobrania.html", page_downloads())
     write("faq.html", page_faq())
+    write("polityka-prywatnosci.html", page_privacy())
     write("wiedza/index.html", page_articles_index())
     for a in ARTICLES:
         write(f"wiedza/{a['slug']}.html", page_article(a))
