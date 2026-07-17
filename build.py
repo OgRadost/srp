@@ -461,12 +461,10 @@ i ośrodków szkoleniowych.</p>
 # ]
 TESTIMONIALS = []
 
-# „Zaufali nam” — nazwy odbiorców, którym sprzedano sprzęt.
-# UWAGA: publikuj nazwę jednostki/firmy tylko po jej zgodzie na referencję
-# (przy instytucjach publicznych zwykle wystarczy zgoda mailowa osoby decyzyjnej).
-# Format: ("Nazwa odbiorcy", "opcjonalny-plik-logo.png" lub None)
-# Logo wrzuć do img/klienci/
-CLIENTS = []
+# „Meldunek: fantomy w służbie” — dziennik wdrożeń (anonimizowany, bez nazw odbiorców,
+# więc nie wymaga zgód na referencję; wpisuj wyłącznie rzeczywiste dostawy).
+# Format: ("RRRR-MM", "model sprzętu", "typ jednostki", "region")
+DEPLOYMENTS = []
 
 # ---------------------------------------------------------------- szablon
 def esc(s): return html.escape(s, quote=False)
@@ -708,7 +706,22 @@ table.specs td,table.specs th{border-bottom:1px solid var(--line);padding-top:10
 .refbox{border:2px solid var(--yellow);background:#fffdf0;padding:30px 34px;margin-top:32px;max-width:760px}
 .refbox h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:24px;margin-bottom:8px}
 .refbox p{color:var(--muted);margin-bottom:18px}
-.clients figcaption.only-name{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:18px;color:var(--ink);text-transform:none;letter-spacing:0;border:1px solid var(--line);padding:18px 20px;background:#fff}
+
+/* meldunek — dziennik wdrożeń */
+.meldunek{background:var(--black);color:#e6e6e6;padding:26px 30px;margin-top:32px;max-width:860px;border-left:6px solid var(--yellow)}
+.m-head{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:22px;color:var(--yellow);letter-spacing:1px;display:flex;align-items:center;gap:10px}
+.m-dot{width:10px;height:10px;border-radius:50%;background:#3ddc55;box-shadow:0 0 8px #3ddc55;animation:puls 1.6s infinite}
+@keyframes puls{50%{opacity:.35}}
+.m-stats{font-size:13.5px;color:#9a9a9a;margin:8px 0 18px;text-transform:uppercase;letter-spacing:1px}
+.m-stats b{color:var(--yellow)}
+.deploy{display:flex;align-items:center;gap:18px;padding:13px 0;border-top:1px solid #2b2b2b}
+.d-date{font-family:'Barlow Condensed';font-weight:800;font-style:italic;color:var(--yellow);font-size:17px;min-width:74px}
+.d-body{flex:1;display:flex;flex-direction:column}
+.d-body strong{font-size:15.5px}
+.d-body span{font-size:13px;color:#9a9a9a}
+.stamp{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:13px;letter-spacing:2px;color:var(--yellow);border:2px solid var(--yellow);padding:3px 10px;transform:rotate(-6deg);white-space:nowrap}
+.m-foot{border-top:1px solid #2b2b2b;margin-top:4px;padding-top:12px;font-size:12px;color:#7a7a7a}
+@media(max-width:600px){.deploy{flex-wrap:wrap}.stamp{margin-left:88px}}
 .course h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:22px}
 .course p{color:var(--muted);font-size:15px}
 
@@ -816,19 +829,28 @@ def page_home():
         for s in SEGMENTS
     )
     faqs = "\n".join(f'<details class="faq"><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in FAQS[:4])
-    clients_html = ""
-    if CLIENTS:
-        items = "".join(
-            (f'<figure><img src="img/klienci/{logo}" alt="{esc(name)}" loading="lazy"><figcaption>{esc(name)}</figcaption></figure>'
-             if logo else f'<figure><figcaption class="only-name">{esc(name)}</figcaption></figure>')
-            for name, logo in CLIENTS)
-        clients_html = f'<h3 style="margin-top:38px">Zaufali nam</h3><div class="certs clients">{items}</div>'
+    deploys_html = ""
+    if DEPLOYMENTS:
+        n_units = len(DEPLOYMENTS)
+        n_regions = len({d[3] for d in DEPLOYMENTS})
+        rows = "\n".join(
+            f'''<div class="deploy"><span class="d-date">{esc(dt)}</span>
+            <div class="d-body"><strong>{esc(model)}</strong><span>{esc(unit)} · {esc(region)}</span></div>
+            <span class="stamp">W SŁUŻBIE</span></div>'''
+            for dt, model, unit, region in DEPLOYMENTS)
+        deploys_html = f'''
+        <div class="meldunek">
+          <div class="m-head"><span class="m-dot"></span> MELDUNEK: FANTOMY W SŁUŻBIE</div>
+          <div class="m-stats"><b>{n_units}</b> wdrożeń &nbsp;·&nbsp; <b>{n_regions}</b> regionów &nbsp;·&nbsp; status: <b>operacyjne</b></div>
+          {rows}
+          <div class="m-foot">Dziennik aktualizowany po każdej dostawie. Nazwy jednostek publikujemy wyłącznie za ich zgodą.</div>
+        </div>'''
     if TESTIMONIALS:
         quotes = ('<div class="grid3" style="margin-top:36px">' + "\n".join(
             f'<div class="quote"><p>„{esc(t)}”</p><div class="who">{esc(n)}<span>{esc(o)}</span></div></div>'
-            for t, n, o in TESTIMONIALS) + "</div>") + clients_html
-    elif CLIENTS:
-        quotes = clients_html
+            for t, n, o in TESTIMONIALS) + "</div>") + deploys_html
+    elif DEPLOYMENTS:
+        quotes = deploys_html
     else:
         quotes = """<div class="refbox">
       <h3>Twoja jednostka może być naszą pierwszą polską referencją</h3>

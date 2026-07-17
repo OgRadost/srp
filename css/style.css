@@ -107,7 +107,22 @@ table.specs td,table.specs th{border-bottom:1px solid var(--line);padding-top:10
 .refbox{border:2px solid var(--yellow);background:#fffdf0;padding:30px 34px;margin-top:32px;max-width:760px}
 .refbox h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:24px;margin-bottom:8px}
 .refbox p{color:var(--muted);margin-bottom:18px}
-.clients figcaption.only-name{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:18px;color:var(--ink);text-transform:none;letter-spacing:0;border:1px solid var(--line);padding:18px 20px;background:#fff}
+
+/* meldunek — dziennik wdrożeń */
+.meldunek{background:var(--black);color:#e6e6e6;padding:26px 30px;margin-top:32px;max-width:860px;border-left:6px solid var(--yellow)}
+.m-head{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:22px;color:var(--yellow);letter-spacing:1px;display:flex;align-items:center;gap:10px}
+.m-dot{width:10px;height:10px;border-radius:50%;background:#3ddc55;box-shadow:0 0 8px #3ddc55;animation:puls 1.6s infinite}
+@keyframes puls{50%{opacity:.35}}
+.m-stats{font-size:13.5px;color:#9a9a9a;margin:8px 0 18px;text-transform:uppercase;letter-spacing:1px}
+.m-stats b{color:var(--yellow)}
+.deploy{display:flex;align-items:center;gap:18px;padding:13px 0;border-top:1px solid #2b2b2b}
+.d-date{font-family:'Barlow Condensed';font-weight:800;font-style:italic;color:var(--yellow);font-size:17px;min-width:74px}
+.d-body{flex:1;display:flex;flex-direction:column}
+.d-body strong{font-size:15.5px}
+.d-body span{font-size:13px;color:#9a9a9a}
+.stamp{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:13px;letter-spacing:2px;color:var(--yellow);border:2px solid var(--yellow);padding:3px 10px;transform:rotate(-6deg);white-space:nowrap}
+.m-foot{border-top:1px solid #2b2b2b;margin-top:4px;padding-top:12px;font-size:12px;color:#7a7a7a}
+@media(max-width:600px){.deploy{flex-wrap:wrap}.stamp{margin-left:88px}}
 .course h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:22px}
 .course p{color:var(--muted);font-size:15px}
 
