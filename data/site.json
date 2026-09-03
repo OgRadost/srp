@@ -9,7 +9,7 @@
   },
   "domena": {
     "adres": "srp-polska.pl",
-    "aktywna": false,
+    "aktywna": true,
     "hosting": "pages",
     "_hosting_opcje": "cyberfolks = strona na Waszym serwerze (wysyłka FTP z GitHub Actions), pages = GitHub Pages (wtedy build tworzy plik CNAME)",
     "_instrukcja": "Ustaw aktywna=true DOPIERO po zarejestrowaniu domeny i ustawieniu DNS w cyber_Folks (rekordy A + CNAME, opis w README). Wtedy build sam utworzy plik CNAME i przestawi adresy w sitemap oraz w podglądach linków. Do tego czasu strona działa pod ogradost.github.io/srp."
