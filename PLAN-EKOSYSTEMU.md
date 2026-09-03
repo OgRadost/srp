@@ -173,11 +173,27 @@ Efekt: n8n (albo Ty z telefonu) zmienia jeden plik JSON w repo → strona publik
 4. **ETAP 6** — przychód powtarzalny.
 5. **ETAP 5 + 7** — usprawnienia i pomiar.
 
+## Stack (potwierdzony 2026-07-18)
+
+| Warstwa | Narzędzie | Status |
+|---------|-----------|--------|
+| Automatyzacja | **n8n** (własna instancja) | ✅ jest |
+| CRM / marketing | **HubSpot** | ✅ jest |
+| Zadania / projekty | **ClickUp** | ✅ jest |
+| Hosting, domeny, poczta | **cyber_Folks** | ✅ jest |
+| Strona WWW | GitHub Pages + auto-build (Actions) | ✅ działa |
+| Domena | **srp-polska.pl** (jedna, bez dodatkowych) | do rejestracji |
+
+Podział ról: HubSpot = kontakty, deale, maile marketingowe. ClickUp = realizacja
+(dostawy, szkolenia, serwis). n8n = spina wszystko i aktualizuje stronę.
+cyber_Folks = domena i poczta firmowa (biuro@srp-polska.pl), strona zostaje na Pages.
+
 ## Blokery po stronie klienta (bez tego stoimy)
 
-- [ ] e-mail na leady i alerty
-- [ ] instancja n8n (istniejąca czy stawiamy nową?)
-- [ ] wybór CRM (HubSpot Free / ClickUp)
-- [ ] dane firmy: nazwa, telefon, adres, NIP
+- [ ] rejestracja domeny srp-polska.pl w cyber_Folks + DNS (instrukcja w README)
+- [ ] zgoda producenta na użycie znaku „SRP" w domenie (mail wystarczy)
+- [ ] adres e-mail na leady i alerty
+- [ ] URL webhooka n8n do `data/site.json`
+- [ ] dane firmy: pełna nazwa, telefon, adres, NIP
 - [ ] prawdziwe dostawy do meldunku
 - [ ] logotypy certyfikatów (STB / ERC / TECC)

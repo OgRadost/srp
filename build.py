@@ -26,7 +26,15 @@ BRAND = _firma.get("nazwa") or "SRP Polska"
 DISTRIBUTOR = _firma.get("opis") or "Wyłączny dystrybutor produktów SRP w Polsce"
 PHONE = _firma.get("telefon") or "+48 000 000 000"
 EMAIL = _firma.get("email") or "biuro@twojadomena.pl"
-BASE_URL = "https://ogradost.github.io/srp"  # [docelowo własna domena]
+# adres serwisu: własna domena po jej uruchomieniu, do tego czasu GitHub Pages
+_domena = SITE.get("domena", {}) or {}
+DOMAIN_ACTIVE = bool(_domena.get("aktywna")) and bool(_domena.get("adres"))
+DOMAIN = (_domena.get("adres") or "").strip()
+for _pref in ("https://", "http://"):
+    if DOMAIN.startswith(_pref):
+        DOMAIN = DOMAIN[len(_pref):]
+DOMAIN = DOMAIN.strip("/")
+BASE_URL = f"https://{DOMAIN}" if DOMAIN_ACTIVE else "https://ogradost.github.io/srp"
 FORM_ENDPOINT = (SITE.get("formularze", {}) or {}).get("endpoint", "").strip()
 
 # atrybuty formularzy: z webhookiem n8n (AJAX) albo tryb "kanał w przygotowaniu"
@@ -1600,6 +1608,14 @@ def write_seo_files():
     urls = "\n".join(f"  <url><loc>{base}/{u}</loc></url>" for u in pages)
     write("sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}\n</urlset>\n')
     write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {base}/sitemap.xml\n")
+
+    # własna domena dla GitHub Pages — plik powstaje dopiero po jej uruchomieniu
+    cname_path = os.path.join(ROOT, "CNAME")
+    if DOMAIN_ACTIVE:
+        write("CNAME", DOMAIN + "\n")
+    elif os.path.exists(cname_path):
+        os.remove(cname_path)
+        print("✓ usunięto CNAME (domena nieaktywna)")
 
 # ---------------------------------------------------------------- build
 def main():

@@ -19,6 +19,36 @@ przygotowana pod wprowadzenie produktów SRP na rynek polski.
 - `build.py` — generator: **treści edytuj w tym pliku** (dane produktów w `PRODUCTS`, szkolenia w `COURSES`,
   dane firmy na górze pliku), potem `python3 build.py` żeby przebudować wszystkie strony.
 
+## Własna domena: srp-polska.pl
+
+Przełączenie jest jednym ruchem, ale **dopiero po ustawieniu DNS** — inaczej strona
+przestanie się otwierać.
+
+**Krok 1. Rejestracja w cyber_Folks** — domenę rejestruj na firmę, nie na osobę prywatną.
+Przed rejestracją potwierdź mailowo ze Svenska Räddningsprodukter AB prawo do użycia
+znaku „SRP" w domenie i ustalcie, co dzieje się z nią przy zakończeniu współpracy.
+
+**Krok 2. DNS w panelu cyber_Folks** — cztery rekordy A dla domeny głównej
+(adresy serwerów GitHub Pages) oraz CNAME dla `www`:
+
+```
+A     @     185.199.108.153
+A     @     185.199.109.153
+A     @     185.199.110.153
+A     @     185.199.111.153
+CNAME www   ogradost.github.io.
+```
+
+**Krok 3. GitHub** — Settings → Pages → Custom domain: `srp-polska.pl`, zaznacz
+„Enforce HTTPS" (certyfikat wystawia się sam, zwykle w kilkanaście minut).
+
+**Krok 4. Przełącznik w repo** — w `data/site.json` ustaw `"domena": {"aktywna": true}`.
+Build sam utworzy plik `CNAME` i przestawi adresy w `sitemap.xml`, `robots.txt`
+i w podglądach linków (Open Graph). Zmiana `false` cofa wszystko.
+
+Propagacja DNS trwa od kilkunastu minut do kilku godzin — krok 4 rób po tym, jak
+`srp-polska.pl` zacznie się otwierać.
+
 ## Podgląd lokalny
 
 ```
