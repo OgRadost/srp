@@ -15,7 +15,7 @@
     "_instrukcja": "Ustaw aktywna=true DOPIERO po zarejestrowaniu domeny i ustawieniu DNS w cyber_Folks (rekordy A + CNAME, opis w README). Wtedy build sam utworzy plik CNAME i przestawi adresy w sitemap oraz w podglądach linków. Do tego czasu strona działa pod ogradost.github.io/srp."
   },
   "formularze": {
-    "endpoint": "",
+    "endpoint": "https://n8n.ogrodowiak.pl/webhook/srp-lead",
     "_instrukcja": "Wklej tu adres webhooka n8n (np. https://n8n.twojadomena.pl/webhook/srp-lead). Pusty = formularze pokazują komunikat, że kanał jest w przygotowaniu, i podają e-mail zapasowy."
   },
   "meldunek": {
