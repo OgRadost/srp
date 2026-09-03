@@ -9,11 +9,37 @@ import os, html, json
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
-BRAND = "SRP Polska"
-DISTRIBUTOR = "Wyłączny dystrybutor produktów SRP w Polsce"
-PHONE = "+48 000 000 000"          # [do uzupełnienia]
-EMAIL = "biuro@twojadomena.pl"     # [do uzupełnienia]
+# --- dane edytowalne przez automaty (n8n) i ludzi: data/site.json ---------
+def load_site_data():
+    path = os.path.join(ROOT, "data", "site.json")
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"! data/site.json nieczytelny ({e}) — używam wartości domyślnych")
+        return {}
+
+SITE = load_site_data()
+_firma = SITE.get("firma", {})
+
+BRAND = _firma.get("nazwa") or "SRP Polska"
+DISTRIBUTOR = _firma.get("opis") or "Wyłączny dystrybutor produktów SRP w Polsce"
+PHONE = _firma.get("telefon") or "+48 000 000 000"
+EMAIL = _firma.get("email") or "biuro@twojadomena.pl"
 BASE_URL = "https://ogradost.github.io/srp"  # [docelowo własna domena]
+FORM_ENDPOINT = (SITE.get("formularze", {}) or {}).get("endpoint", "").strip()
+
+# atrybuty formularzy: z webhookiem n8n (AJAX) albo tryb "kanał w przygotowaniu"
+if FORM_ENDPOINT:
+    form_attrs = f'action="{FORM_ENDPOINT}" method="post" data-lead-form="1"'
+    FORM_NOTE = ("Odpowiadamy zwykle w ciągu jednego dnia roboczego. Administratorem danych jest "
+                 f"{BRAND} — wykorzystujemy je wyłącznie do obsługi zapytania "
+                 "(<a href=\"polityka-prywatnosci.html\">polityka prywatności</a>).")
+else:
+    form_attrs = 'action="#" method="post" data-lead-form="0"'
+    FORM_NOTE = (f'Wysyłka formularza jest w trakcie uruchamiania — napisz bezpośrednio na '
+                 f'<a href="mailto:{EMAIL}">{EMAIL}</a> lub zadzwoń: '
+                 f'<a href="tel:{PHONE.replace(" ", "")}">{PHONE}</a>.')
 
 # ---------------------------------------------------------------- produkty
 PRODUCTS = [
@@ -459,18 +485,19 @@ i ośrodków szkoleniowych.</p>
 # TESTIMONIALS = [
 #     ("Treść opinii…", "Imię Nazwisko / stopień", "Jednostka / organizacja"),
 # ]
-TESTIMONIALS = []
+TESTIMONIALS = [
+    (o.get("tresc", ""), o.get("autor", ""), o.get("organizacja", ""))
+    for o in (SITE.get("opinie", {}) or {}).get("wpisy", [])
+    if o.get("tresc")
+]
 
 # „Meldunek: fantomy w służbie” — dziennik wdrożeń (anonimizowany, bez nazw odbiorców,
-# więc nie wymaga zgód na referencję; wpisuj wyłącznie rzeczywiste dostawy).
-# Format: ("RRRR-MM", "model sprzętu", "typ jednostki", "region", "logo.png" lub None)
-# Logo (opcjonalne, wymaga zgody jednostki) wrzuć do img/klienci/
-# !!! WPISY PRZYKŁADOWE (placeholder do czasu podania prawdziwych dostaw) — PODMIEŃ !!!
+# więc nie wymaga zgód na referencję). Źródło: data/site.json → meldunek.wpisy
+# (edytowalne przez n8n po zamknięciu dostawy w CRM).
 DEPLOYMENTS = [
-    ("2026-06", "Manekin PRO ELITE MILITARY", "jednostka wojskowa", "Polska południowa", None),
-    ("2026-06", "Symulatory ran — zestaw instruktorski", "ośrodek szkoleniowy", "woj. mazowieckie", None),
-    ("2026-07", "Manekin Standard", "straż pożarna", "woj. pomorskie", None),
-    ("2026-07", "Manekin z funkcją RKO", "podmiot medyczny", "woj. śląskie", None),
+    (w.get("data", ""), w.get("model", ""), w.get("odbiorca", ""), w.get("region", ""), w.get("logo"))
+    for w in (SITE.get("meldunek", {}) or {}).get("wpisy", [])
+    if w.get("model")
 ]
 
 # ---------------------------------------------------------------- szablon
@@ -592,6 +619,27 @@ def footer(depth=0):
   </div>
   <div class="wrap copyright">© {BRAND}. Produkty SRP® są znakiem towarowym Svenska Räddningsprodukter AB. MADE IN SWEDEN.</div>
 </footer>
+<script>
+/* wysyłka formularzy do webhooka n8n (bez przeładowania strony) */
+(function(){{
+  document.querySelectorAll('form[data-lead-form="1"]').forEach(function(f){{
+    f.addEventListener('submit', function(ev){{
+      ev.preventDefault();
+      var btn=f.querySelector('button[type=submit]'), old=btn?btn.innerHTML:'';
+      if(btn){{ btn.disabled=true; btn.innerHTML='Wysyłanie…'; }}
+      var fd=new FormData(f), data={{}};
+      fd.forEach(function(v,k){{ data[k]= data[k] ? [].concat(data[k],v) : v; }});
+      data._strona=location.pathname; data._czas=new Date().toISOString();
+      fetch(f.action,{{method:'POST',headers:{{'Content-Type':'application/json'}},body:JSON.stringify(data)}})
+        .then(function(r){{ if(!r.ok) throw 0;
+          f.innerHTML='<div class="form-ok"><strong>Dziękujemy — zapytanie dotarło.</strong>'+
+            '<p>Odpowiadamy zwykle w ciągu jednego dnia roboczego.</p></div>'; }})
+        .catch(function(){{ if(btn){{ btn.disabled=false; btn.innerHTML=old; }}
+          alert('Nie udało się wysłać. Napisz na {EMAIL} lub zadzwoń: {PHONE}.'); }});
+    }});
+  }});
+}})();
+</script>
 </body>
 </html>"""
 
@@ -783,6 +831,9 @@ table.specs td,table.specs th{border-bottom:1px solid var(--line);padding-top:10
 .refbox{border:2px solid var(--yellow);background:#fffdf0;padding:30px 34px;margin-top:32px;max-width:760px}
 .refbox h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:24px;margin-bottom:8px}
 .refbox p{color:var(--muted);margin-bottom:18px}
+.form-ok{border:2px solid var(--yellow);background:#fffdf0;padding:26px 30px}
+.form-ok strong{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:22px;display:block;margin-bottom:6px}
+.form-ok p{color:var(--muted);font-size:15px}
 
 /* meldunek — dziennik wdrożeń */
 .meldunek{background:var(--black);color:#e6e6e6;padding:26px 30px;margin-top:32px;max-width:860px;border-left:6px solid var(--yellow)}
@@ -1068,7 +1119,7 @@ def page_home():
     <h2>Bądź na bieżąco</h2>
     <p style="margin:6px 0 18px;max-width:640px">Nowe produkty, terminy szkoleń otwartych i praktyczne
     materiały dla instruktorów — maksymalnie raz w miesiącu, bez spamu.</p>
-    <form action="#" method="post">
+    <form {form_attrs}>
       <input type="email" name="email" placeholder="Twój adres e-mail" required>
       <button class="btn" type="submit">Zapisz się</button>
     </form>
@@ -1225,7 +1276,7 @@ def page_quote():
 finansowania. Odpowiadamy zwykle w ciągu jednego dnia roboczego. Przygotowujemy również kompletną
 dokumentację do zamówień publicznych.</p></div></div>
 <section><div class="wrap">
-<form action="#" method="post" style="max-width:820px">
+<form {form_attrs} style="max-width:820px">
   <div class="grid2" style="gap:16px;align-items:start">
     <label>Imię i nazwisko <input name="name" required></label>
     <label>Organizacja / jednostka <input name="org"></label>
@@ -1253,8 +1304,7 @@ dokumentację do zamówień publicznych.</p></div></div>
   <label>Wiadomość (ilości, konfiguracja — np. masa manekina, planowany termin)
     <textarea name="msg" rows="6"></textarea></label>
   <button class="btn" type="submit">Wyślij zapytanie <span class="arr">→</span></button>
-  <p class="note">[Formularz do podpięcia pod skrzynkę / CRM — np. Formspree lub własny backend.]
-  Administratorem danych jest {BRAND} — dane wykorzystujemy wyłącznie do obsługi zapytania. [Uzupełnij klauzulę RODO.]</p>
+  <p class="note">{FORM_NOTE}</p>
 </form>
 </div></section>
 """
@@ -1325,13 +1375,13 @@ def page_contact():
     <h3 style="margin-top:30px">Producent</h3>
     <p>Svenska Räddningsprodukter AB<br>Bergslagsgatan 1F, SE-733 31 Sala, Szwecja</p>
   </div>
-  <form action="#" method="post">
+  <form {form_attrs}>
     <label>Imię i nazwisko <input name="name" required></label>
     <label>E-mail <input type="email" name="email" required></label>
     <label>Telefon <input type="tel" name="phone"></label>
     <label>Wiadomość <textarea name="msg" rows="6" required></textarea></label>
     <button class="btn" type="submit">Wyślij <span class="arr">→</span></button>
-    <p class="note">[Formularz do podpięcia pod skrzynkę / CRM.]</p>
+    <p class="note">{FORM_NOTE}</p>
   </form>
 </div></section>
 """
@@ -1483,7 +1533,7 @@ jak dobierać sprzęt, projektować ćwiczenia i budować kompetencje zespołu.<
   <h2>Chcesz dostawać takie materiały?</h2>
   <p class="lead">Nowe poradniki, terminy szkoleń otwartych i informacje o produktach —
   maksymalnie raz w miesiącu.</p>
-  <form action="#" method="post" style="display:flex;gap:12px;max-width:560px;margin-top:18px">
+  <form {form_attrs} style="display:flex;gap:12px;max-width:560px;margin-top:18px">
     <input type="email" name="email" placeholder="Twój adres e-mail" required>
     <button class="btn solid" type="submit">Zapisz się</button>
   </form>

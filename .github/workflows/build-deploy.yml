@@ -1,0 +1,57 @@
+name: Buduj i publikuj stronę
+
+# Uruchamia się po każdej zmianie w repo (także gdy n8n zmieni data/site.json)
+# oraz ręcznie z zakładki Actions.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Generuj strony HTML
+        run: python3 build.py
+
+      - name: Zapisz zmiany wygenerowane przez build
+        run: |
+          git config user.name "srp-bot"
+          git config user.email "actions@github.com"
+          git add -A ':!.github'
+          if git diff --staged --quiet; then
+            echo "Brak zmian do zapisania."
+          else
+            git commit -m "Auto-build: przebudowa stron [skip ci]"
+            git push
+          fi
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

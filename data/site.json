@@ -1,0 +1,32 @@
+{
+  "_opis": "Dane strony edytowalne przez automaty (n8n) i ludzi bez ruszania kodu. Po zmianie GitHub Actions sam przebudowuje i publikuje serwis.",
+
+  "firma": {
+    "nazwa": "SRP Polska",
+    "opis": "Wyłączny dystrybutor produktów SRP w Polsce",
+    "telefon": "+48 000 000 000",
+    "email": "biuro@twojadomena.pl",
+    "_do_uzupelnienia": "telefon, email, docelowo adres i NIP"
+  },
+
+  "formularze": {
+    "endpoint": "",
+    "_instrukcja": "Wklej tu adres webhooka n8n (np. https://n8n.twojadomena.pl/webhook/srp-lead). Pusty = formularze pokazują komunikat, że kanał jest w przygotowaniu, i podają e-mail zapasowy."
+  },
+
+  "meldunek": {
+    "_instrukcja": "Prawdziwe dostawy. Format: data RRRR-MM, model, typ odbiorcy (bez nazwy własnej), region, logo (plik z img/klienci/ lub null). Automat n8n dopisuje tu wpis po zamknięciu dostawy w CRM.",
+    "_uwaga": "PONIŻSZE WPISY SĄ PRZYKŁADOWE — PODMIEŃ NA PRAWDZIWE",
+    "wpisy": [
+      {"data": "2026-06", "model": "Manekin PRO ELITE MILITARY", "odbiorca": "jednostka wojskowa", "region": "Polska południowa", "logo": null},
+      {"data": "2026-06", "model": "Symulatory ran — zestaw instruktorski", "odbiorca": "ośrodek szkoleniowy", "region": "woj. mazowieckie", "logo": null},
+      {"data": "2026-07", "model": "Manekin Standard", "odbiorca": "straż pożarna", "region": "woj. pomorskie", "logo": null},
+      {"data": "2026-07", "model": "Manekin z funkcją RKO", "odbiorca": "podmiot medyczny", "region": "woj. śląskie", "logo": null}
+    ]
+  },
+
+  "opinie": {
+    "_instrukcja": "WYŁĄCZNIE prawdziwe opinie za zgodą autora. Format: tresc, autor, organizacja.",
+    "wpisy": []
+  }
+}

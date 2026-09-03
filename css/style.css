@@ -107,6 +107,9 @@ table.specs td,table.specs th{border-bottom:1px solid var(--line);padding-top:10
 .refbox{border:2px solid var(--yellow);background:#fffdf0;padding:30px 34px;margin-top:32px;max-width:760px}
 .refbox h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:24px;margin-bottom:8px}
 .refbox p{color:var(--muted);margin-bottom:18px}
+.form-ok{border:2px solid var(--yellow);background:#fffdf0;padding:26px 30px}
+.form-ok strong{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:22px;display:block;margin-bottom:6px}
+.form-ok p{color:var(--muted);font-size:15px}
 
 /* meldunek — dziennik wdrożeń */
 .meldunek{background:var(--black);color:#e6e6e6;padding:26px 30px;margin-top:32px;max-width:860px;border-left:6px solid var(--yellow)}

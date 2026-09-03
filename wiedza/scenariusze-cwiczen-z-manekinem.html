@@ -103,5 +103,26 @@ u Was</a> — z naszym sprzętem i instruktorami.</p>
   </div>
   <div class="wrap copyright">© SRP Polska. Produkty SRP® są znakiem towarowym Svenska Räddningsprodukter AB. MADE IN SWEDEN.</div>
 </footer>
+<script>
+/* wysyłka formularzy do webhooka n8n (bez przeładowania strony) */
+(function(){
+  document.querySelectorAll('form[data-lead-form="1"]').forEach(function(f){
+    f.addEventListener('submit', function(ev){
+      ev.preventDefault();
+      var btn=f.querySelector('button[type=submit]'), old=btn?btn.innerHTML:'';
+      if(btn){ btn.disabled=true; btn.innerHTML='Wysyłanie…'; }
+      var fd=new FormData(f), data={};
+      fd.forEach(function(v,k){ data[k]= data[k] ? [].concat(data[k],v) : v; });
+      data._strona=location.pathname; data._czas=new Date().toISOString();
+      fetch(f.action,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)})
+        .then(function(r){ if(!r.ok) throw 0;
+          f.innerHTML='<div class="form-ok"><strong>Dziękujemy — zapytanie dotarło.</strong>'+
+            '<p>Odpowiadamy zwykle w ciągu jednego dnia roboczego.</p></div>'; })
+        .catch(function(){ if(btn){ btn.disabled=false; btn.innerHTML=old; }
+          alert('Nie udało się wysłać. Napisz na biuro@twojadomena.pl lub zadzwoń: +48 000 000 000.'); });
+    });
+  });
+})();
+</script>
 </body>
 </html>
