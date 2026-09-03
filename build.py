@@ -552,18 +552,22 @@ def pic(prefix, label, cls="ph", depth=0):
         return (f'<div class="{cls} has-img"><img src="{p}img/{f}" alt="{esc(label)}" loading="lazy"></div>')
     return placeholder(label, cls)
 
-def head(title, depth=0):
+DESC_DOMYSLNY = ("Szwedzkie manekiny ratownicze i symulatory ran SRP — wyłączny dystrybutor w Polsce. "
+                 "Realistyczny sprzęt treningowy dla straży pożarnej, wojska, ratownictwa medycznego i wodnego.")
+
+def head(title, depth=0, desc=None):
     p = "../" * depth
+    d = " ".join((desc or DESC_DOMYSLNY).split())[:300]
     return f"""<!DOCTYPE html>
 <html lang="pl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(title)} | {BRAND}</title>
-<meta name="description" content="Szwedzkie manekiny ratownicze i symulatory ran SRP — wyłączny dystrybutor w Polsce. Realistyczny sprzęt treningowy dla straży pożarnej, wojska, ratownictwa medycznego i wodnego.">
+<meta name="description" content="{esc(d)}">
 <link rel="icon" type="image/svg+xml" href="{p}img/srp-logo.svg">
 <meta property="og:title" content="{esc(title)} | {BRAND}">
-<meta property="og:description" content="Szwedzkie manekiny ratownicze i symulatory ran SRP — wyłączny dystrybutor w Polsce.">
+<meta property="og:description" content="{esc(d)}">
 <meta property="og:image" content="{BASE_URL}/img/home-01.jpg">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pl_PL">
@@ -988,7 +992,16 @@ def page_home():
     </div>"""
     hero_bg = ('style="background-image:linear-gradient(rgba(10,12,8,.55),rgba(10,12,8,.7)),'
                "url('img/home-01.jpg');background-size:cover;background-position:center\"") if main_image("home") else ""
+    org_ld = json.dumps({
+        "@context": "https://schema.org", "@type": "Organization",
+        "name": BRAND, "description": DISTRIBUTOR, "url": BASE_URL,
+        "email": EMAIL, "telephone": PHONE.replace(" ", ""),
+        "logo": BASE_URL + "/img/srp-logo.svg", "areaServed": "PL",
+        "contactPoint": {"@type": "ContactPoint", "telephone": PHONE.replace(" ", ""),
+                          "email": EMAIL, "contactType": "sales", "availableLanguage": ["pl", "en"]},
+    }, ensure_ascii=False)
     body = f"""
+<script type="application/ld+json">{org_ld}</script>
 <div class="hero" {hero_bg}>
   <div class="wrap">
     <div class="kicker">Przenieś swój trening ratowniczy</div>
@@ -1199,7 +1212,7 @@ def page_product(p):
   </div>
 </section>
 """
-    return head(p["name"], 1) + body + footer(1)
+    return head(p["name"], 1, p["short"]) + body + footer(1)
 
 CERT_DIR = os.path.join(IMG_DIR, "certyfikaty")
 
@@ -1563,7 +1576,7 @@ def page_article(a):
   <a href="../zapytanie-ofertowe.html"><strong>Wyślij zapytanie →</strong></a></div>
 </div></section>
 """
-    return head(a["title"], 1) + body + footer(1)
+    return head(a["title"], 1, a["lead"]) + body + footer(1)
 
 def page_privacy():
     body = f"""
