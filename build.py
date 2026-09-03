@@ -29,6 +29,7 @@ EMAIL = _firma.get("email") or "biuro@twojadomena.pl"
 # adres serwisu: własna domena po jej uruchomieniu, do tego czasu GitHub Pages
 _domena = SITE.get("domena", {}) or {}
 DOMAIN_ACTIVE = bool(_domena.get("aktywna")) and bool(_domena.get("adres"))
+HOSTING = (_domena.get("hosting") or "pages").strip().lower()
 DOMAIN = (_domena.get("adres") or "").strip()
 for _pref in ("https://", "http://"):
     if DOMAIN.startswith(_pref):
@@ -1609,13 +1610,13 @@ def write_seo_files():
     write("sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}\n</urlset>\n')
     write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {base}/sitemap.xml\n")
 
-    # własna domena dla GitHub Pages — plik powstaje dopiero po jej uruchomieniu
+    # CNAME jest potrzebny wyłącznie przy hostingu na GitHub Pages
     cname_path = os.path.join(ROOT, "CNAME")
-    if DOMAIN_ACTIVE:
+    if DOMAIN_ACTIVE and HOSTING == "pages":
         write("CNAME", DOMAIN + "\n")
     elif os.path.exists(cname_path):
         os.remove(cname_path)
-        print("✓ usunięto CNAME (domena nieaktywna)")
+        print("✓ usunięto CNAME (hosting: %s)" % HOSTING)
 
 # ---------------------------------------------------------------- build
 def main():
