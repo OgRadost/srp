@@ -4,7 +4,13 @@
     "nazwa": "SRP Polska",
     "opis": "Wyłączny dystrybutor produktów SRP w Polsce",
     "telefon": "+48 660 408 679",
-    "email": "kontakt@srp-polska.pl"
+    "email": "kontakt@srp-polska.pl",
+    "nazwa_pelna": "TURBOMEDIC Sp. z o.o.",
+    "adres_ulica": "ul. Jedności Narodowej 160/U1",
+    "adres_miasto": "50-302 Wrocław",
+    "nip": "8992744764",
+    "krs": "0000466223",
+    "regon": "022157983"
   },
   "domena": {
     "adres": "srp-polska.pl",

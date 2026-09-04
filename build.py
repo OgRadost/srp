@@ -26,6 +26,18 @@ BRAND = _firma.get("nazwa") or "SRP Polska"
 DISTRIBUTOR = _firma.get("opis") or "Wyłączny dystrybutor produktów SRP w Polsce"
 PHONE = _firma.get("telefon") or "+48 000 000 000"
 EMAIL = _firma.get("email") or "biuro@twojadomena.pl"
+NAZWA_PELNA = _firma.get("nazwa_pelna") or ""
+ADRES_ULICA = _firma.get("adres_ulica") or ""
+ADRES_MIASTO = _firma.get("adres_miasto") or ""
+NIP = _firma.get("nip") or ""
+KRS = _firma.get("krs") or ""
+REGON = _firma.get("regon") or ""
+# blok danych rejestrowych — wymog ustawy o swiadczeniu uslug droga elektroniczna
+if NAZWA_PELNA:
+    DANE_REJESTROWE = (f"{NAZWA_PELNA}<br>{ADRES_ULICA}<br>{ADRES_MIASTO}<br>"
+                       f"NIP {NIP} &nbsp;·&nbsp; KRS {KRS} &nbsp;·&nbsp; REGON {REGON}")
+else:
+    DANE_REJESTROWE = "[dane rejestrowe do uzupełnienia]"
 # adres serwisu: własna domena po jej uruchomieniu, do tego czasu GitHub Pages
 _domena = SITE.get("domena", {}) or {}
 DOMAIN_ACTIVE = bool(_domena.get("aktywna")) and bool(_domena.get("adres"))
@@ -604,6 +616,7 @@ def footer(depth=0):
     <div>
       <h4>{BRAND}</h4>
       <p>{DISTRIBUTOR}</p>
+      <p class="rejestr">{DANE_REJESTROWE}</p>
       <p><a href="tel:{PHONE.replace(' ', '')}">{PHONE}</a><br><a href="mailto:{EMAIL}">{EMAIL}</a></p>
       <p><a href="{p}polityka-prywatnosci.html">Polityka prywatności</a></p>
     </div>
@@ -901,6 +914,7 @@ footer{background:var(--black);color:#d6d6d6;padding:56px 0 24px;font-size:14.5p
 .foot-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:36px}
 footer h4{font-family:'Barlow Condensed';font-style:italic;text-transform:uppercase;color:var(--yellow);font-size:19px;margin-bottom:10px}
 footer a{color:#d6d6d6}
+.rejestr{font-size:12.5px;color:#9a9a9a;line-height:1.7}
 .copyright{border-top:1px solid #2a2a2a;margin-top:40px;padding-top:18px;font-size:12.5px;color:#8a8a8a}
 
 /* podstrony — nagłówek */
@@ -1014,6 +1028,10 @@ def page_home():
         "name": BRAND, "description": DISTRIBUTOR, "url": BASE_URL,
         "email": EMAIL, "telephone": PHONE.replace(" ", ""),
         "logo": BASE_URL + "/img/srp-logo.svg", "areaServed": "PL",
+        "legalName": NAZWA_PELNA, "taxID": NIP, "vatID": "PL" + NIP,
+        "address": {"@type": "PostalAddress", "streetAddress": ADRES_ULICA,
+                     "postalCode": ADRES_MIASTO.split(" ")[0], "addressLocality": " ".join(ADRES_MIASTO.split(" ")[1:]),
+                     "addressCountry": "PL"},
         "contactPoint": {"@type": "ContactPoint", "telephone": PHONE.replace(" ", ""),
                           "email": EMAIL, "contactType": "sales", "availableLanguage": ["pl", "en"]},
     }, ensure_ascii=False)
@@ -1409,9 +1427,9 @@ def page_contact():
   <div>
     <h3>{BRAND}</h3>
     <p>{DISTRIBUTOR}</p>
+    <p style="margin-top:12px">{DANE_REJESTROWE}</p>
     <p style="margin-top:14px"><strong>Telefon:</strong> <a href="tel:{PHONE.replace(' ', '')}">{PHONE}</a><br>
     <strong>E-mail:</strong> <a href="mailto:{EMAIL}">{EMAIL}</a></p>
-    <p class="note" style="margin-top:10px">Pełne dane rejestrowe firmy uzupełnimy wkrótce.</p>
     <h3 style="margin-top:30px">Producent</h3>
     <p>Svenska Räddningsprodukter AB<br>Bergslagsgatan 1F, SE-733 31 Sala, Szwecja</p>
   </div>
@@ -1603,8 +1621,11 @@ def page_privacy():
 <p>Szkic do weryfikacji prawnej — [uzupełnij dane administratora przed publikacją docelową].</p></div></div>
 <section><div class="wrap" style="max-width:860px">
   <h3>1. Administrator danych</h3>
-  <p>Administratorem danych osobowych jest {BRAND} [pełna nazwa, adres, NIP — do uzupełnienia].
-  Kontakt w sprawach danych osobowych: {EMAIL}.</p>
+  <p>Administratorem Twoich danych osobowych jest:</p>
+  <p style="margin-top:8px"><strong>{NAZWA_PELNA}</strong><br>{ADRES_ULICA}<br>{ADRES_MIASTO}<br>
+  NIP {NIP} &nbsp;·&nbsp; KRS {KRS} &nbsp;·&nbsp; REGON {REGON}</p>
+  <p style="margin-top:8px">Kontakt w sprawach danych osobowych: <a href="mailto:{EMAIL}">{EMAIL}</a>,
+  telefon {PHONE}. Spółka prowadzi sprzedaż produktów SRP w Polsce pod marką {BRAND}.</p>
   <h3 style="margin-top:26px">2. Jakie dane przetwarzamy i po co</h3>
   <p>Przetwarzamy wyłącznie dane przekazane dobrowolnie w formularzach: imię i nazwisko, nazwę
   organizacji, adres e-mail, numer telefonu, NIP oraz treść wiadomości — w celu obsługi zapytania
