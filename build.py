@@ -41,9 +41,11 @@ FORM_ENDPOINT = (SITE.get("formularze", {}) or {}).get("endpoint", "").strip()
 # atrybuty formularzy: z webhookiem n8n (AJAX) albo tryb "kanał w przygotowaniu"
 if FORM_ENDPOINT:
     form_attrs = f'action="{FORM_ENDPOINT}" method="post" data-lead-form="1"'
-    FORM_NOTE = ("Odpowiadamy zwykle w ciągu jednego dnia roboczego. Administratorem danych jest "
-                 f"{BRAND} — wykorzystujemy je wyłącznie do obsługi zapytania "
-                 "(<a href=\"polityka-prywatnosci.html\">polityka prywatności</a>).")
+    FORM_NOTE = (f"Odpowiadamy zwykle w ciągu jednego dnia roboczego. Administratorem Twoich danych jest {BRAND}. "
+                 "Podane dane przetwarzamy wyłącznie w celu obsługi tego zapytania i kontaktu w sprawie oferty — "
+                 "nie wykorzystujemy ich do marketingu bez osobnej zgody. Masz prawo dostępu do swoich danych, "
+                 "ich sprostowania, usunięcia i ograniczenia przetwarzania. "
+                 "<a href=\"/polityka-prywatnosci.html\">Pełna informacja o przetwarzaniu danych</a>.")
 else:
     form_attrs = 'action="#" method="post" data-lead-form="0"'
     FORM_NOTE = (f'Wysyłka formularza jest w trakcie uruchamiania — napisz bezpośrednio na '
@@ -572,9 +574,6 @@ def head(title, depth=0, desc=None):
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pl_PL">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,600;1,800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{p}css/style.css">
 </head>
 <body>
@@ -736,6 +735,20 @@ def render_meldunek(deps):
 
 # ---------------------------------------------------------------- CSS
 CSS = """
+/* kroje pisma hostowane lokalnie — zero polaczen do stron trzecich */
+@font-face{font-family:'Barlow';font-style:normal;font-weight:400;font-display:swap;src:url(../fonts/Barlow-400-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Barlow';font-style:normal;font-weight:400;font-display:swap;src:url(../fonts/Barlow-400-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Barlow';font-style:normal;font-weight:500;font-display:swap;src:url(../fonts/Barlow-500-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Barlow';font-style:normal;font-weight:500;font-display:swap;src:url(../fonts/Barlow-500-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Barlow';font-style:normal;font-weight:600;font-display:swap;src:url(../fonts/Barlow-600-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Barlow';font-style:normal;font-weight:600;font-display:swap;src:url(../fonts/Barlow-600-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Barlow';font-style:normal;font-weight:700;font-display:swap;src:url(../fonts/Barlow-700-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Barlow';font-style:normal;font-weight:700;font-display:swap;src:url(../fonts/Barlow-700-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Barlow Condensed';font-style:italic;font-weight:600;font-display:swap;src:url(../fonts/BarlowCondensed-600i-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Barlow Condensed';font-style:italic;font-weight:600;font-display:swap;src:url(../fonts/BarlowCondensed-600i-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-display:swap;src:url(../fonts/BarlowCondensed-800i-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-display:swap;src:url(../fonts/BarlowCondensed-800i-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+
 :root{
   --yellow:#f5e003; --black:#0d0d0d; --dark:#161616; --paper:#ffffff;
   --ink:#1c1c1c; --muted:#5a5a5a; --line:#e5e5e5;
@@ -844,6 +857,10 @@ table.specs td,table.specs th{border-bottom:1px solid var(--line);padding-top:10
 .refbox{border:2px solid var(--yellow);background:#fffdf0;padding:30px 34px;margin-top:32px;max-width:760px}
 .refbox h3{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:24px;margin-bottom:8px}
 .refbox p{color:var(--muted);margin-bottom:18px}
+.consent{display:flex;gap:10px;align-items:flex-start;max-width:600px;margin-top:14px;font-size:13.5px;color:var(--muted);font-weight:400;line-height:1.5}
+.consent input{width:auto;margin-top:3px;flex:none}
+.consent a{color:inherit;text-decoration:underline}
+.newsletter .consent{color:#4a4a2a}
 .form-ok{border:2px solid var(--yellow);background:#fffdf0;padding:26px 30px}
 .form-ok strong{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-size:22px;display:block;margin-bottom:6px}
 .form-ok p{color:var(--muted);font-size:15px}
@@ -1145,6 +1162,7 @@ def page_home():
       <input type="email" name="email" placeholder="Twój adres e-mail" required>
       <button class="btn" type="submit">Zapisz się</button>
     </form>
+    <label class="consent"><input type="checkbox" name="zgoda_marketing" required> <span>Chcę otrzymywać materiały i informacje o produktach oraz szkoleniach na podany adres e-mail. Zgodę mogę wycofać w każdej chwili, a jej brak nie wpływa na możliwość kontaktu z nami. <a href="/polityka-prywatnosci.html">Informacja o przetwarzaniu danych</a>.</span></label>
   </div>
 </div>
 """
@@ -1559,6 +1577,7 @@ jak dobierać sprzęt, projektować ćwiczenia i budować kompetencje zespołu.<
     <input type="email" name="email" placeholder="Twój adres e-mail" required>
     <button class="btn solid" type="submit">Zapisz się</button>
   </form>
+  <label class="consent"><input type="checkbox" name="zgoda_marketing" required> <span>Chcę otrzymywać materiały i informacje o produktach oraz szkoleniach na podany adres e-mail. Zgodę mogę wycofać w każdej chwili, a jej brak nie wpływa na możliwość kontaktu z nami. <a href="/polityka-prywatnosci.html">Informacja o przetwarzaniu danych</a>.</span></label>
 </div></section>
 """
     return head("Strefa wiedzy", 1) + body + footer(1)
@@ -1610,6 +1629,33 @@ def page_privacy():
 """
     return head("Polityka prywatności") + body + footer()
 
+
+def page_404():
+    """Serwer podaje ten plik pod dowolnym brakującym adresem, więc wszystkie
+    odnośniki muszą być bezwzględne — inaczej style i nawigacja się rozjadą."""
+    body = f"""
+<div class="page-head"><div class="wrap"><h1>Nie ma takiej strony</h1>
+<p>Adres jest nieaktualny albo zawiera literówkę. Poniżej najczęściej szukane miejsca.</p></div></div>
+<section><div class="wrap">
+  <div class="grid3">
+    <div class="card"><div class="body"><h3>Produkty</h3>
+      <p>Manekiny ratownicze, symulatory ran i trenażery medyczne — pełny katalog z danymi technicznymi.</p>
+      {btn("/produkty/index.html", "Zobacz katalog")}</div></div>
+    <div class="card"><div class="body"><h3>Porównanie modeli</h3>
+      <p>Wszystkie manekiny lądowe w jednej tabeli — od ewakuacji po medycynę taktyczną.</p>
+      {btn("/porownanie-manekinow.html", "Porównaj")}</div></div>
+    <div class="card"><div class="body"><h3>Kontakt</h3>
+      <p>Zadzwoń: {PHONE} lub napisz na {EMAIL} — odpowiadamy w ciągu dnia roboczego.</p>
+      {btn("/kontakt.html", "Napisz do nas")}</div></div>
+  </div>
+</div></section>
+"""
+    html_out = head("Nie ma takiej strony") + body + footer()
+    # zamiana ścieżek względnych na bezwzględne
+    import re as _r
+    html_out = _r.sub(r'(href|src)="(?!/|https?:|mailto:|tel:|#|data:)', r'\1="/', html_out)
+    return html_out
+
 def write_seo_files():
     pages = (["index.html", "produkty/index.html"]
              + [f"produkty/{p['slug']}.html" for p in PRODUCTS]
@@ -1650,6 +1696,7 @@ def main():
     write("do-pobrania.html", page_downloads())
     write("faq.html", page_faq())
     write("polityka-prywatnosci.html", page_privacy())
+    write("404.html", page_404())
     write("wiedza/index.html", page_articles_index())
     for a in ARTICLES:
         write(f"wiedza/{a['slug']}.html", page_article(a))
