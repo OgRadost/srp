@@ -1184,7 +1184,7 @@ def page_home():
   </div>
 </div>
 """
-    return head("Manekiny ratownicze i symulatory ran — dystrybutor SRP w Polsce") + body + footer()
+    return head("Manekiny ratownicze i symulatory ran SRP") + body + footer()
 
 def page_products_index():
     cards = "\n".join(
@@ -1198,7 +1198,7 @@ def page_products_index():
 przetestowane w praktyce, zaprojektowane na lata intensywnych ćwiczeń.</p></div></div>
 <section><div class="wrap grid3">{cards}</div></section>
 """
-    return head("Produkty", 1) + body + footer(1)
+    return head("Manekiny ratownicze i fantomy — katalog", 1) + body + footer(1)
 
 def page_product(p):
     feats = "\n".join(f"<li>{esc(f)}</li>" for f in p["features"])
@@ -1293,7 +1293,7 @@ symulatorach ran i manekinach SRP.</p></div></div>
   <div style="margin-top:20px">{btn("zapytanie-ofertowe.html", "Zapytaj o termin i wycenę")}</div>
 </div></section>
 """
-    return head("Szkolenia", 0) + body + footer()
+    return head("Szkolenia RKO, pierwsza pomoc, Stop the Bleed", 0) + body + footer()
 
 def page_terms():
     body = f"""
@@ -1324,7 +1324,7 @@ def page_terms():
   <p>Towar pozostaje własnością sprzedawcy do momentu pełnej zapłaty.</p>
 </div></section>
 """
-    return head("Warunki zakupu") + body + footer()
+    return head("Warunki zakupu, dostawa i gwarancja") + body + footer()
 
 def page_quote():
     prods = "\n".join(f'<label><input type="checkbox" name="products" value="{p["slug"]}"> {esc(p["name"])}</label>' for p in PRODUCTS)
@@ -1366,7 +1366,7 @@ dokumentację do zamówień publicznych.</p></div></div>
 </form>
 </div></section>
 """
-    return head("Zapytanie ofertowe") + body + footer()
+    return head("Wycena manekinów ratowniczych i szkoleń") + body + footer()
 
 def page_about():
     body = f"""
@@ -1400,7 +1400,7 @@ def page_about():
   </div>
 </div></section>
 """
-    return head("O nas") + body + footer()
+    return head("O nas — dystrybutor SRP w Polsce") + body + footer()
 
 def page_news():
     body = f"""
@@ -1418,7 +1418,7 @@ def page_news():
   <a href="wiedza/index.html"><strong>Zapisz się na nasze materiały →</strong></a></p>
 </div></section>
 """
-    return head("Aktualności") + body + footer()
+    return head("Aktualności — wdrożenia i szkolenia") + body + footer()
 
 def page_contact():
     body = f"""
@@ -1443,7 +1443,7 @@ def page_contact():
   </form>
 </div></section>
 """
-    return head("Kontakt") + body + footer()
+    return head("Kontakt — dystrybutor manekinów SRP") + body + footer()
 
 def page_segments():
     by_slug = {p["slug"]: p for p in PRODUCTS}
@@ -1469,7 +1469,7 @@ def page_segments():
 rozwiązania: co sprawdza się w Twojej służbie i od czego warto zacząć.</p></div></div>
 {''.join(blocks)}
 """
-    return head("Rozwiązania dla branż") + body + footer()
+    return head("Manekiny dla straży, wojska i szpitali") + body + footer()
 
 def page_compare():
     thead = "<tr><th>Cecha</th>" + "".join(f"<th>{esc(n)}</th>" for _, n in COMPARE_COLS) + "</tr>"
@@ -1491,7 +1491,7 @@ taktyczną. Jeśli potrzebujesz pomocy w doborze, po prostu opisz nam swoje scen
   <div style="margin-top:26px"><a class="btn solid" href="zapytanie-ofertowe.html">Poproś o wycenę wybranych modeli <span class="arr">→</span></a></div>
 </div></section>
 """
-    return head("Porównanie manekinów") + body + footer()
+    return head("Porównanie manekinów ratowniczych") + body + footer()
 
 def page_tenders():
     body = f"""
@@ -1525,7 +1525,7 @@ codzienność — pomagamy na każdym etapie, od szacowania wartości po dostaw�
   </div>
 </div></section>
 """
-    return head("Zamówienia publiczne") + body + footer()
+    return head("Manekiny ratownicze w przetargach") + body + footer()
 
 def page_downloads():
     items = "\n".join(
@@ -1550,7 +1550,7 @@ Jeśli brakuje dokumentu, którego potrzebujesz, napisz: {EMAIL}.</p></div></div
   <div class="dl"><div><strong>Przykładowe opisy przedmiotu zamówienia (OPZ)</strong><div class="meta">DOCX · udostępniamy na życzenie</div></div><a class="btn" href="zapytanie-ofertowe.html">Napisz do nas</a></div>
 </div></section>
 """
-    return head("Do pobrania") + body + footer()
+    return head("Karty katalogowe i certyfikaty") + body + footer()
 
 def page_faq():
     items = "\n".join(f'<details class="faq"><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in FAQS)
@@ -1568,7 +1568,7 @@ Zadzwoń: {PHONE}.</p></div></div>
 <div style="margin-top:30px">{btn("kontakt.html", "Zadaj własne pytanie")}</div>
 </div></section>
 """
-    return head("Pytania i odpowiedzi (FAQ)") + body + footer()
+    return head("Zakup manekinów — pytania i odpowiedzi") + body + footer()
 
 ARTICLE_IMGS = {
     "jak-wybrac-manekin-ratowniczy": "produkty-01.jpg",
@@ -1598,7 +1598,7 @@ jak dobierać sprzęt, projektować ćwiczenia i budować kompetencje zespołu.<
   <label class="consent"><input type="checkbox" name="zgoda_marketing" required> <span>Chcę otrzymywać materiały i informacje o produktach oraz szkoleniach na podany adres e-mail. Zgodę mogę wycofać w każdej chwili, a jej brak nie wpływa na możliwość kontaktu z nami. <a href="/polityka-prywatnosci.html">Informacja o przetwarzaniu danych</a>.</span></label>
 </div></section>
 """
-    return head("Strefa wiedzy", 1) + body + footer(1)
+    return head("Dobór sprzętu i scenariusze ćwiczeń", 1) + body + footer(1)
 
 def page_article(a):
     body = f"""
