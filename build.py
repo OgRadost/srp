@@ -664,8 +664,9 @@ def footer(depth=0):
       data._strona=location.pathname; data._czas=new Date().toISOString();
       fetch(f.action,{{method:'POST',headers:{{'Content-Type':'application/json'}},body:JSON.stringify(data)}})
         .then(function(r){{ if(!r.ok) throw 0;
-          f.innerHTML='<div class="form-ok"><strong>Dziękujemy — zapytanie dotarło.</strong>'+
-            '<p>Odpowiadamy zwykle w ciągu jednego dnia roboczego.</p></div>'; }})
+          f.innerHTML = (data.typ==='newsletter')
+            ? '<div class="form-ok"><strong>Dziękujemy — jesteś na liście.</strong><p>Materiały wysyłamy najwyżej raz w miesiącu. Zgodę możesz wycofać w każdej chwili.</p></div>'
+            : '<div class="form-ok"><strong>Dziękujemy — zapytanie dotarło.</strong><p>Odpowiadamy zwykle w ciągu jednego dnia roboczego.</p></div>'; }})
         .catch(function(){{ if(btn){{ btn.disabled=false; btn.innerHTML=old; }}
           alert('Nie udało się wysłać. Napisz na {EMAIL} lub zadzwoń: {PHONE}.'); }});
     }});
@@ -979,7 +980,8 @@ table.cmp tbody tr:hover td{background:#fffbe0}
 
 .newsletter{background:var(--yellow);padding:56px 0}
 .newsletter h2{color:var(--black)}
-.newsletter form{display:flex;gap:12px;max-width:560px}
+.newsletter form{display:flex;flex-wrap:wrap;gap:12px;max-width:560px}
+form .consent{flex-basis:100%}
 .newsletter .btn{background:var(--black);color:var(--yellow);border-color:var(--black)}
 
 @media(max-width:960px){
@@ -1186,8 +1188,9 @@ def page_home():
     <form {form_attrs}>
       <input type="email" name="email" placeholder="Twój adres e-mail" required>
       <button class="btn" type="submit">Zapisz się</button>
-    </form>
+    <input type="hidden" name="typ" value="newsletter">
     <label class="consent"><input type="checkbox" name="zgoda_marketing" required> <span>Chcę otrzymywać materiały i informacje o produktach oraz szkoleniach na podany adres e-mail. Zgodę mogę wycofać w każdej chwili, a jej brak nie wpływa na możliwość kontaktu z nami. <a href="/polityka-prywatnosci.html">Informacja o przetwarzaniu danych</a>.</span></label>
+    </form>
   </div>
 </div>
 """
@@ -1598,11 +1601,12 @@ jak dobierać sprzęt, projektować ćwiczenia i budować kompetencje zespołu.<
   <h2>Chcesz dostawać takie materiały?</h2>
   <p class="lead">Nowe poradniki, terminy szkoleń otwartych i informacje o produktach —
   maksymalnie raz w miesiącu.</p>
-  <form {form_attrs} style="display:flex;gap:12px;max-width:560px;margin-top:18px">
+  <form {form_attrs} style="display:flex;flex-wrap:wrap;gap:12px;max-width:560px;margin-top:18px">
     <input type="email" name="email" placeholder="Twój adres e-mail" required>
     <button class="btn solid" type="submit">Zapisz się</button>
-  </form>
+  <input type="hidden" name="typ" value="newsletter">
   <label class="consent"><input type="checkbox" name="zgoda_marketing" required> <span>Chcę otrzymywać materiały i informacje o produktach oraz szkoleniach na podany adres e-mail. Zgodę mogę wycofać w każdej chwili, a jej brak nie wpływa na możliwość kontaktu z nami. <a href="/polityka-prywatnosci.html">Informacja o przetwarzaniu danych</a>.</span></label>
+  </form>
 </div></section>
 """
     return head("Dobór sprzętu i scenariusze ćwiczeń", 1) + body + footer(1)

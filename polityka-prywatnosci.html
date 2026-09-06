@@ -110,8 +110,9 @@
       data._strona=location.pathname; data._czas=new Date().toISOString();
       fetch(f.action,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)})
         .then(function(r){ if(!r.ok) throw 0;
-          f.innerHTML='<div class="form-ok"><strong>Dziękujemy — zapytanie dotarło.</strong>'+
-            '<p>Odpowiadamy zwykle w ciągu jednego dnia roboczego.</p></div>'; })
+          f.innerHTML = (data.typ==='newsletter')
+            ? '<div class="form-ok"><strong>Dziękujemy — jesteś na liście.</strong><p>Materiały wysyłamy najwyżej raz w miesiącu. Zgodę możesz wycofać w każdej chwili.</p></div>'
+            : '<div class="form-ok"><strong>Dziękujemy — zapytanie dotarło.</strong><p>Odpowiadamy zwykle w ciągu jednego dnia roboczego.</p></div>'; })
         .catch(function(){ if(btn){ btn.disabled=false; btn.innerHTML=old; }
           alert('Nie udało się wysłać. Napisz na kontakt@srp-polska.pl lub zadzwoń: +48 660 408 679.'); });
     });

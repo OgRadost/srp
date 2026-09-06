@@ -43,11 +43,12 @@ jak dobierać sprzęt, projektować ćwiczenia i budować kompetencje zespołu.<
   <h2>Chcesz dostawać takie materiały?</h2>
   <p class="lead">Nowe poradniki, terminy szkoleń otwartych i informacje o produktach —
   maksymalnie raz w miesiącu.</p>
-  <form action="https://n8n.ogrodowiak.pl/webhook/srp-lead" method="post" data-lead-form="1" style="display:flex;gap:12px;max-width:560px;margin-top:18px">
+  <form action="https://n8n.ogrodowiak.pl/webhook/srp-lead" method="post" data-lead-form="1" style="display:flex;flex-wrap:wrap;gap:12px;max-width:560px;margin-top:18px">
     <input type="email" name="email" placeholder="Twój adres e-mail" required>
     <button class="btn solid" type="submit">Zapisz się</button>
-  </form>
+  <input type="hidden" name="typ" value="newsletter">
   <label class="consent"><input type="checkbox" name="zgoda_marketing" required> <span>Chcę otrzymywać materiały i informacje o produktach oraz szkoleniach na podany adres e-mail. Zgodę mogę wycofać w każdej chwili, a jej brak nie wpływa na możliwość kontaktu z nami. <a href="/polityka-prywatnosci.html">Informacja o przetwarzaniu danych</a>.</span></label>
+  </form>
 </div></section>
 
 <footer>
@@ -96,8 +97,9 @@ jak dobierać sprzęt, projektować ćwiczenia i budować kompetencje zespołu.<
       data._strona=location.pathname; data._czas=new Date().toISOString();
       fetch(f.action,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)})
         .then(function(r){ if(!r.ok) throw 0;
-          f.innerHTML='<div class="form-ok"><strong>Dziękujemy — zapytanie dotarło.</strong>'+
-            '<p>Odpowiadamy zwykle w ciągu jednego dnia roboczego.</p></div>'; })
+          f.innerHTML = (data.typ==='newsletter')
+            ? '<div class="form-ok"><strong>Dziękujemy — jesteś na liście.</strong><p>Materiały wysyłamy najwyżej raz w miesiącu. Zgodę możesz wycofać w każdej chwili.</p></div>'
+            : '<div class="form-ok"><strong>Dziękujemy — zapytanie dotarło.</strong><p>Odpowiadamy zwykle w ciągu jednego dnia roboczego.</p></div>'; })
         .catch(function(){ if(btn){ btn.disabled=false; btn.innerHTML=old; }
           alert('Nie udało się wysłać. Napisz na kontakt@srp-polska.pl lub zadzwoń: +48 660 408 679.'); });
     });

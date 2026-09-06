@@ -223,7 +223,8 @@ table.cmp tbody tr:hover td{background:#fffbe0}
 
 .newsletter{background:var(--yellow);padding:56px 0}
 .newsletter h2{color:var(--black)}
-.newsletter form{display:flex;gap:12px;max-width:560px}
+.newsletter form{display:flex;flex-wrap:wrap;gap:12px;max-width:560px}
+form .consent{flex-basis:100%}
 .newsletter .btn{background:var(--black);color:var(--yellow);border-color:var(--black)}
 
 @media(max-width:960px){
