@@ -557,13 +557,20 @@ def gallery_images(prefix, limit=6):
     main = main_image(prefix)
     return [f for f in images_for(prefix) if f != main and _size(f) > 40_000][:limit]
 
-def pic(prefix, label, cls="ph", depth=0):
+def thumb_path(f):
+    """miniatura 640 px z img/thumb/ (zawsze .jpg); None gdy brak"""
+    t = os.path.splitext(f)[0] + ".jpg"
+    return t if os.path.exists(os.path.join(IMG_DIR, "thumb", t)) else None
+
+def pic(prefix, label, cls="ph", depth=0, thumb=False):
     """zdjęcie z img/ (największe dla prefiksu) albo placeholder; prefix może być
-    też konkretną nazwą pliku (z kropką)."""
+    też konkretną nazwą pliku (z kropką). thumb=True -> miniatura do kart/kafli."""
     p = "../" * depth
     f = prefix if (prefix and "." in prefix) else (main_image(prefix) if prefix else None)
     if f and os.path.exists(os.path.join(IMG_DIR, f)):
-        return (f'<div class="{cls} has-img"><img src="{p}img/{f}" alt="{esc(label)}" loading="lazy"></div>')
+        t = thumb_path(f) if thumb else None
+        src = f"{p}img/thumb/{t}" if t else f"{p}img/{f}"
+        return (f'<div class="{cls} has-img"><img src="{src}" alt="{esc(label)}" loading="lazy" decoding="async"></div>')
     return placeholder(label, cls)
 
 DESC_DOMYSLNY = ("Szwedzkie manekiny ratownicze i symulatory ran SRP — wyłączny dystrybutor w Polsce. "
@@ -993,7 +1000,7 @@ table.cmp tbody tr:hover td{background:#fffbe0}
 # ---------------------------------------------------------------- strony
 def page_home():
     cards = "\n".join(
-        f'<div class="card">{pic(p["slug"], p["name"])}<div class="body"><h3>{esc(p["name"])}</h3>'
+        f'<div class="card">{pic(p["slug"], p["name"], thumb=True)}<div class="body"><h3>{esc(p["name"])}</h3>'
         f'<p>{esc(p["short"])}</p>{btn("produkty/" + p["slug"] + ".html", "Czytaj więcej")}</div></div>'
         for p in PRODUCTS
     )
@@ -1059,13 +1066,13 @@ def page_home():
 
 <section>
   <div class="wrap grid3">
-    <div class="card">{pic("home-02.jpg", "Manekiny ratownicze")}<div class="body">
+    <div class="card">{pic("home-02.jpg", "Manekiny ratownicze", thumb=True)}<div class="body">
       <h3>Manekiny ratownicze</h3><p>Wysokiej jakości manekiny do ćwiczeń na lądzie i w wodzie — od ewakuacji w dymie po scenariusze taktyczno-medyczne.</p>
       {btn("produkty/index.html", "Czytaj więcej")}</div></div>
-    <div class="card">{pic("szkolenia", "Szkolenia")}<div class="body">
+    <div class="card">{pic("szkolenia", "Szkolenia", thumb=True)}<div class="body">
       <h3>Szkolenia</h3><p>Kursy RKO, pierwszej pomocy i kontroli krwotoków prowadzone przez certyfikowanych instruktorów z doświadczeniem operacyjnym.</p>
       {btn("szkolenia.html", "Czytaj więcej")}</div></div>
-    <div class="card">{pic("symulatory-ran", "Symulatory ran")}<div class="body">
+    <div class="card">{pic("symulatory-ran", "Symulatory ran", thumb=True)}<div class="body">
       <h3>Symulatory ran</h3><p>Bardzo realistyczne symulatory obrażeń do szkoleń z tamowania krwotoków — staza, packing, opatrunek uciskowy.</p>
       {btn("produkty/symulatory-ran.html", "Czytaj więcej")}</div></div>
   </div>
@@ -1083,7 +1090,7 @@ def page_home():
       <p class="lead" style="margin-top:14px">Jako wyłączny dystrybutor SRP w Polsce zapewniamy doradztwo,
       sprzedaż, serwis i szkolenia z użyciem oryginalnego sprzętu.</p>
     </div>
-    {pic("home-12.jpg", "Produkcja SRP", "ph tall")}
+    {pic("home-12.jpg", "Produkcja SRP", "ph tall", thumb=True)}
   </div>
 </section>
 
@@ -1107,7 +1114,7 @@ def page_home():
       realistyczny, żeby prawdziwa sytuacja była już „tym drugim razem”. Ręcznie wykonywane produkty
       z logo SRP to znak jakości — funkcjonalności, realizmu i trwałości.</p>
     </div>
-    {pic("home-06.jpg", "Ćwiczenia służb ratowniczych z manekinem SRP")}
+    {pic("home-06.jpg", "Ćwiczenia służb ratowniczych z manekinem SRP", thumb=True)}
   </div>
 </section>
 
@@ -1188,7 +1195,7 @@ def page_home():
 
 def page_products_index():
     cards = "\n".join(
-        f'<div class="card">{pic(p["slug"], p["name"], depth=1)}<div class="body"><h3>{esc(p["name"])}</h3>'
+        f'<div class="card">{pic(p["slug"], p["name"], depth=1, thumb=True)}<div class="body"><h3>{esc(p["name"])}</h3>'
         f'<p>{esc(p["short"])}</p>{btn(p["slug"] + ".html", "Czytaj więcej")}</div></div>'
         for p in PRODUCTS
     )
@@ -1206,7 +1213,7 @@ def page_product(p):
     specs_html = f'<h3>Dane techniczne</h3><table class="specs">{specs}</table>' if specs else ""
     gal = gallery_images(p["slug"])
     gallery_html = ('<div class="gallery">' + "".join(
-        f'<a href="../img/{f}" target="_blank"><img src="../img/{f}" alt="{esc(p["name"])} — zdjęcie" loading="lazy"></a>'
+        f'<a href="../img/{f}" target="_blank"><img src="{("../img/thumb/" + thumb_path(f)) if thumb_path(f) else ("../img/" + f)}" alt="{esc(p["name"])} — zdjęcie" loading="lazy" decoding="async"></a>'
         for f in gal) + "</div>") if gal else ""
     vids = videos_for(p["slug"])
     video_html = "".join(
@@ -1383,7 +1390,7 @@ def page_about():
     <p class="lead" style="margin-top:14px">Filozofia marki: trening ma być tak realistyczny, żeby
     prawdziwe zdarzenie było już „tym drugim razem”.</p>
   </div>
-  {pic("home-05.jpg", "Produkty SRP", "ph tall")}
+  {pic("home-05.jpg", "Produkty SRP", "ph tall", thumb=True)}
 </section>
 <section class="gray"><div class="wrap grid2">
   {placeholder("Zdjęcie: zespół dystrybutora w Polsce")}
@@ -1408,7 +1415,7 @@ def page_news():
 <p>Wdrożenia, targi, nowe produkty i terminy szkoleń.</p></div></div>
 <section><div class="wrap">
   <div class="grid3">
-  <div class="card">{pic("home-05.jpg", "Produkty SRP")}<div class="body"><h3>Produkty SRP oficjalnie w Polsce</h3>
+  <div class="card">{pic("home-05.jpg", "Produkty SRP", thumb=True)}<div class="body"><h3>Produkty SRP oficjalnie w Polsce</h3>
   <p>Rozpoczynamy oficjalną, wyłączną dystrybucję szwedzkich manekinów ratowniczych i symulatorów ran
   SRP na rynku polskim. Zapraszamy jednostki i ośrodki szkoleniowe na bezpłatne pokazy sprzętu.</p>
   {btn("zapytanie-ofertowe.html", "Umów pokaz")}</div></div>
@@ -1450,7 +1457,7 @@ def page_segments():
     blocks = []
     for s in SEGMENTS:
         prods = "\n".join(
-            f'<div class="card">{pic(sl, by_slug[sl]["name"])}<div class="body"><h3>{esc(by_slug[sl]["name"])}</h3>'
+            f'<div class="card">{pic(sl, by_slug[sl]["name"], thumb=True)}<div class="body"><h3>{esc(by_slug[sl]["name"])}</h3>'
             f'<p>{esc(by_slug[sl]["short"])}</p>{btn("produkty/" + sl + ".html", "Czytaj więcej")}</div></div>'
             for sl in s["products"]
         )
@@ -1578,7 +1585,7 @@ ARTICLE_IMGS = {
 
 def page_articles_index():
     cards = "\n".join(
-        f'<div class="card">{pic(ARTICLE_IMGS.get(a["slug"]), a["title"], depth=1)}<div class="body"><h3>{esc(a["title"])}</h3>'
+        f'<div class="card">{pic(ARTICLE_IMGS.get(a["slug"]), a["title"], depth=1, thumb=True)}<div class="body"><h3>{esc(a["title"])}</h3>'
         f'<p>{esc(a["lead"])}</p>{btn(a["slug"] + ".html", "Czytaj artykuł")}</div></div>'
         for a in ARTICLES
     )
